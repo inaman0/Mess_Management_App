@@ -1,0 +1,32 @@
+{
+
+"sample`": {
+
+  "custer" : "traveler_db",
+  "ui" : false,
+  "api" : true,
+  "fields" : {
+    "id": {
+
+     "name" : "id",
+     "required" : "true",
+     "type" : "String"
+     },
+    "code": {
+
+     "name" : "code",
+     "required" : "true",
+     "type" : "String"
+     },
+    "name": {
+
+     "name" : "name",
+     "required" : "true",
+     "type" : "String"
+     }
+   
+  }
+ }
+
+}
+

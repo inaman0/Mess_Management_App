@@ -1,0 +1,137 @@
+{
+
+"Flight": {
+
+  "custer" : "traveler_db",
+  "ui" : false,
+  "api" : true,
+  "fields" : {
+    "id": {
+
+     "name" : "id",
+     "rquired" : "true",
+     "type" : "String"
+     },
+    "g_created_by_id": {
+
+     "name" : "g_created_by_id",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "g_created_by_name": {
+
+     "name" : "g_created_by_name",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "g_modified_by_id": {
+
+     "name" : "g_modified_by_id",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "g_modified_by_name": {
+
+     "name" : "g_modified_by_name",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "g_creation_time": {
+
+     "name" : "g_creation_time",
+     "rquired" : "false",
+     "type" : "long"
+     },
+    "g_modify_time": {
+
+     "name" : "g_modify_time",
+     "rquired" : "false",
+     "type" : "long"
+     },
+    "g_soft_delete": {
+
+     "name" : "g_soft_delete",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "g_status": {
+
+     "name" : "g_status",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "archived": {
+
+     "name" : "archived",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "archived_time": {
+
+     "name" : "archived_time",
+     "rquired" : "false",
+     "type" : "long"
+     },
+    "flight_number": {
+
+     "name" : "flight_number",
+     "rquired" : "true",
+     "type" : "String"
+     },
+    "airline_id": {
+
+     "name" : "airline_id",
+     "rquired" : "true",
+     "foreign" : {
+      "resource" :"airline" 
+      },
+     "type" : "String"
+     },
+    "destination_location_id": {
+
+     "name" : "destination_location_id",
+     "rquired" : "true",
+     "foreign" : {
+      "resource" :"location" 
+      },
+     "type" : "String"
+     },
+    "departure_location_id": {
+
+     "name" : "departure_location_id",
+     "rquired" : "true",
+     "foreign" : {
+      "resource" :"location" 
+      },
+     "type" : "String"
+     },
+    "departure_date_and_time": {
+
+     "name" : "departure_date_and_time",
+     "rquired" : "true",
+     "type" : "String"
+     },
+    "arrival_date_and_time": {
+
+     "name" : "arrival_date_and_time",
+     "rquired" : "true",
+     "type" : "String"
+     },
+    "status": {
+
+     "name" : "status",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "extra_data": {
+
+     "name" : "extra_data",
+     "rquired" : "false",
+     "type" : "Map"
+     }
+   
+  }
+ }
+
+}
+

@@ -1,0 +1,25 @@
+{
+			"resource" : "location",
+			"table" : true,
+			"tile" : false,
+			"display_name" : "location",
+			"menu_context" : "setup",
+			"page_name" : {
+				"list" : "location",
+				"add" : "location",
+				"edit" : "location",
+				"view" : "location"
+			},
+			"add_required" : true,
+			"modify_required" : true,
+			"delete_required" : true,
+			"login_required" : true,
+			"list" : {
+				"fields":[
+				]
+			},
+			"form" : {
+					"blocks": [
+					]
+			}
+}

@@ -1,0 +1,26 @@
+{
+
+"menu": {
+
+  "cluster" : "traveler_db",
+  "ui" : false,
+  "api" : true,
+  "fields" : {
+    "id": {
+
+     "name" : "id",
+     "required" : "true",
+     "type" : "String"
+     },
+    "Date": {
+
+     "name" : "Date",
+     "required" : "true",
+     "type" : "Date"
+     }
+   
+  }
+ }
+
+}
+

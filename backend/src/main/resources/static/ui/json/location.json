@@ -1,0 +1,37 @@
+{
+  "location": {
+    "cluster": "DB_PROFILE",
+    "ui": false,
+    "api": true,
+    "display_name": "location",
+    "menu_context": "setup",
+
+    "fields": {
+      "id": {
+        "index": true,
+        "name": "id",
+        "length": 40,
+        "required": true,
+        "type": "String"
+      },
+      "airport_name": {
+        "index": true,
+        "name": "airport_name",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      },
+      "code": {
+        "index": true,
+        "name": "code",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      }
+    }
+  }
+}

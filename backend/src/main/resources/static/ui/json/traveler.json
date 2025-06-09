@@ -1,0 +1,52 @@
+
+{
+  "traveler": {
+    "cluster": "DB_PROFILE",
+    "ui": false,
+    "api": true,
+    "display_name": "traveler",
+    "menu_context": "setup",
+
+    "fields": {
+      "id": {
+        "index": true,
+        "name": "id",
+        "length": 40,
+        "required": true,
+        "type": "String"
+      },
+      "name": {
+        "index": true,
+        "name": "name",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      },
+      "traveler_gender": {
+        "index": true,
+        "name": "traveler_gender",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      },
+      "passport_id": {
+        "index": true,
+        "name": "passport_id",
+        "length": 128,
+        "type": "String",
+
+        "required": false,
+        "foreign": {
+          "resource": "passport"
+        }
+      }
+
+    }
+  }
+}
+
+

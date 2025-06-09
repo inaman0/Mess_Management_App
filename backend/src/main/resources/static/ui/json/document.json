@@ -1,0 +1,68 @@
+{
+  "document": {
+    "cluster": "DB_PROFILE",
+    "ui": true,
+    "api": true,
+    "display_name": "document",
+    "menu_context": "setup",
+    "blocks": {
+      "bookings": {
+        "title": "document Details",
+        "order": 1
+      }
+    },
+    "fields": {
+      "id": {
+        "index": true,
+        "name": "id",
+        "length": 40,
+        "required": true,
+        "type": "String"
+      },
+      "passport_id": {
+        "index": true,
+        "name": "passport_id",
+        "length": 128,
+        "type": "String",
+        "block": "passport",
+        "required": true,
+        "foreign": {
+          "resource": "passport"
+        }
+      },
+      "booking_id": {
+
+        "index": true,
+        "name": "booking_id",
+        "length": 128,
+        "type": "String",
+        "block": "bookings",
+        "required": true,
+        "foreign": {
+          "resource": "bookings"
+        }
+      },
+
+      "traveler_id": {
+        "index": true,
+        "name": "traveler_id",
+        "length": 128,
+        "type": "String",
+        "block": "traveler",
+        "required": true,
+        "foreign": {
+          "resource": "traveler"
+        }
+      },"status": {
+        "index": true,
+        "name": "status",
+        "length": 128,
+        "type": "int",
+        "block": "document",
+        "required": false
+
+      }
+
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "bookings": {
+    "cluster": "DB_PROFILE",
+    "ui": false,
+    "api": true,
+    "display_name": "bookings",
+    "menu_context": "setup",
+
+    "fields": {
+      "id": {
+        "index": true,
+        "name": "id",
+        "length": 40,
+        "required": true,
+        "type": "String"
+      },
+      "traveler_id": {
+
+        "name": "traveler_id",
+        "length": 128,
+        "type": "String",
+
+        "required": true,
+        "foreign": {
+          "resource": "traveler"
+        }
+      },
+      "flight_id": {
+
+        "name": "flight_id",
+        "length": 128,
+        "type": "String",
+
+        "required": true,
+        "foreign": {
+          "resource": "flight"
+        }
+      },
+
+      "travel_date": {
+
+        "name": "travel_date",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      }
+    }
+  }
+}

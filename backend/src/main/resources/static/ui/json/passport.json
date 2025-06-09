@@ -1,0 +1,47 @@
+{
+  "passport": {
+    "cluster": "DB_PROFILE",
+    "ui": false,
+    "api": true,
+    "display_name": "passport",
+    "menu_context": "setup",
+
+    "fields": {
+      "id": {
+        "index": true,
+        "name": "id",
+        "length": 40,
+        "required": true,
+        "type": "String"
+      },
+      "full_name": {
+
+        "name": "full_name",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      },
+
+      "passport_number": {
+
+        "name": "passport_number",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      },
+      "nationality": {
+
+        "name": "nationality",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      }
+    }
+  }
+}

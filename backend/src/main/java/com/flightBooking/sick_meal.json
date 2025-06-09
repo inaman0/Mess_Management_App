@@ -1,0 +1,44 @@
+{
+
+"sick_meal": {
+
+  "cluster" : "traveler_db",
+  "ui" : false,
+  "api" : true,
+  "fields" : {
+    "id": {
+
+     "name" : "id",
+     "required" : "true",
+     "type" : "String"
+     },
+    "User_id": {
+
+     "name" : "User_id",
+     "required" : "true",
+     "foreign" : {
+      "resource" :"User" 
+      },
+     "type" : "String"
+     },
+    "Meal_id": {
+
+     "name" : "Meal_id",
+     "required" : "true",
+     "foreign" : {
+      "resource" :"Meal" 
+      },
+     "type" : "String"
+     },
+    "Instruction": {
+
+     "name" : "Instruction",
+     "required" : "false",
+     "type" : "String"
+     }
+   
+  }
+ }
+
+}
+

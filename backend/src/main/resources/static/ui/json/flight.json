@@ -1,0 +1,90 @@
+{
+  "flight": {
+    "cluster": "DB_PROFILE",
+    "ui": false,
+    "api": true,
+    "display_name": "flight",
+    "menu_context": "setup",
+
+    "fields": {
+      "id": {
+        "index": true,
+        "name": "id",
+        "length": 40,
+        "required": true,
+        "type": "String"
+      },
+      "flight_number": {
+        "index": true,
+        "name": "flight_number",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      },
+      "airline_id": {
+        "index": true,
+        "name": "airline_id",
+        "length": 128,
+        "type": "String",
+
+        "required": true,
+
+        "foreign": {
+          "resource": "airline"
+        }
+      },
+      "destination_location_id": {
+        "index": true,
+        "name": "destination_location_id",
+        "length": 128,
+        "type": "String",
+
+        "required": true,
+        "foreign": {
+          "resource": "location"
+        }
+      },
+      "departure_location_id": {
+        "index": true,
+        "name": "departure_location_id",
+        "length": 128,
+        "type": "String",
+
+        "required": true,
+        "foreign": {
+          "resource": "location"
+        }
+      },
+
+      "departure_date_and_time": {
+        "index": true,
+        "name": "departure_date_and_time",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      },
+      "arrival_date_and_time": {
+        "index": true,
+        "name": "arrival_date_and_time",
+        "length": 128,
+        "type": "String",
+
+        "required": true
+
+      },
+      "status": {
+        "index": true,
+        "name": "status",
+        "length": 128,
+        "type": "String",
+
+        "required": false
+
+      }
+    }
+  }
+}

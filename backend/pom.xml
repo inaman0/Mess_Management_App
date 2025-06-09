@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <rasp-platform.version>1.0.0-SNAPSHOT</rasp-platform.version>
+        <elasticsearch.version>6.6.2</elasticsearch.version>
+        <jackson.version>2.9.4</jackson.version>
+        <log4j-version>2.8.2</log4j-version>
+        <kafka.version>2.1.0</kafka.version>
+        <activemq.version>5.6.0</activemq.version>
+        <mongo.version>5.1.1</mongo.version>
+        <poi.version>3.12</poi.version>
+        <httpclient.version>4.5.2</httpclient.version>
+        <!--<tomcat.version>7.0.63</tomcat.version>-->
+        <start-class>com.flightBooking.FlightBookingSystemApplication</start-class>
+    </properties>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.1</version>
+    </parent>
+    <groupId>com.fllightBooking</groupId>
+    <artifactId>FlightBookingSystem</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>FlightBookingSystem</name>
+    <description>Demo project for Spring Boot</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>rasp-platform</groupId>
+            <artifactId>rasp-platform</artifactId>
+            <version>${rasp-platform.version}</version>
+        </dependency>
+        <!-- Swagger-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version> 2.0.2</version>
+
+
+
+        </dependency>
+
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+    </dependencies>
+
+
+
+    <build>
+        <finalName>travel_app</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

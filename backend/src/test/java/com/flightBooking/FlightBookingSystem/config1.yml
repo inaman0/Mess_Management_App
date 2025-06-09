@@ -1,0 +1,22 @@
+name: "Plan1"
+Plan:
+  - resource: "Location"
+    operation: "C"
+    instanceName: "Loc1"
+
+  - resource: "Location"
+    operation: "C"
+    instanceName: "Loc2"
+
+  - resource: "Passport"
+    operation: "C"
+    instanceName: "P1"
+
+  - resource: "Airline"
+    operation: "C"
+    instanceName: "Arilne1"
+
+
+
+
+

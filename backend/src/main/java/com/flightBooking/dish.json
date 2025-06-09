@@ -1,0 +1,40 @@
+{
+
+"dish": {
+
+  "cluster" : "traveler_db",
+  "ui" : false,
+  "api" : true,
+  "fields" : {
+    "id": {
+
+     "name" : "id",
+     "required" : "true",
+     "type" : "String"
+     },
+    "Dish_name": {
+
+     "name" : "Dish_name",
+     "required" : "true",
+     "type" : "String"
+     },
+    "Is_veg": {
+
+     "name" : "Is_veg",
+     "required" : "true",
+     "type" : "Boolean"
+     },
+    "Dish_type": {
+
+     "name" : "Dish_type",
+     "required" : "true",
+     "is_enum" : "true",
+      "possible_value" :"Dish_type", 
+     "type" : "String"
+     }
+   
+  }
+ }
+
+}
+

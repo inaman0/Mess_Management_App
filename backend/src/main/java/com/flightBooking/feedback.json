@@ -1,0 +1,47 @@
+{
+
+"feedback": {
+
+  "cluster" : "traveler_db",
+  "ui" : false,
+  "api" : true,
+  "fields" : {
+    "id": {
+
+     "name" : "id",
+     "required" : "true",
+     "type" : "String"
+     },
+    "User": {
+
+     "name" : "User",
+     "required" : "true",
+     "foreign" : {
+      "resource" :"User" 
+      },
+     "type" : "String"
+     },
+    "Description": {
+
+     "name" : "Description",
+     "required" : "true",
+     "type" : "String"
+     },
+    "Date": {
+
+     "name" : "Date",
+     "required" : "true",
+     "type" : "Date"
+     },
+    "Image": {
+
+     "name" : "Image",
+     "required" : "false",
+     "type" : "String"
+     }
+   
+  }
+ }
+
+}
+

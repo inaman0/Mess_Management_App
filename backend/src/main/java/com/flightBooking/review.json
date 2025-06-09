@@ -1,0 +1,44 @@
+{
+
+"review": {
+
+  "cluster" : "traveler_db",
+  "ui" : false,
+  "api" : true,
+  "fields" : {
+    "id": {
+
+     "name" : "id",
+     "required" : "true",
+     "type" : "String"
+     },
+    "User_id": {
+
+     "name" : "User_id",
+     "required" : "true",
+     "foreign" : {
+      "resource" :"User" 
+      },
+     "type" : "String"
+     },
+    "Menu_item_id": {
+
+     "name" : "Menu_item_id",
+     "required" : "true",
+     "foreign" : {
+      "resource" :"Menu_item" 
+      },
+     "type" : "String"
+     },
+    "Ratings": {
+
+     "name" : "Ratings",
+     "required" : "true",
+     "type" : "String"
+     }
+   
+  }
+ }
+
+}
+

@@ -1,0 +1,25 @@
+{
+			"resource" : "bookings",
+			"table" : true,
+			"tile" : false,
+			"display_name" : "bookings",
+			"menu_context" : "setup",
+			"page_name" : {
+				"list" : "bookings",
+				"add" : "bookings",
+				"edit" : "bookings",
+				"view" : "bookings"
+			},
+			"add_required" : true,
+			"modify_required" : true,
+			"delete_required" : true,
+			"login_required" : true,
+			"list" : {
+				"fields":[
+				]
+			},
+			"form" : {
+					"blocks": [
+					]
+			}
+}

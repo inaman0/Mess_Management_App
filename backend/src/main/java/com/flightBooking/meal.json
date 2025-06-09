@@ -1,0 +1,37 @@
+{
+
+"meal": {
+
+  "cluster" : "traveler_db",
+  "ui" : false,
+  "api" : true,
+  "fields" : {
+    "id": {
+
+     "name" : "id",
+     "required" : "true",
+     "type" : "String"
+     },
+    "Meal_type": {
+
+     "name" : "Meal_type",
+     "required" : "true",
+     "is_enum" : "true",
+      "possible_value" :"Meal_type", 
+     "type" : "String"
+     },
+    "Menu_id": {
+
+     "name" : "Menu_id",
+     "required" : "true",
+     "foreign" : {
+      "resource" :"Menu" 
+      },
+     "type" : "String"
+     }
+   
+  }
+ }
+
+}
+

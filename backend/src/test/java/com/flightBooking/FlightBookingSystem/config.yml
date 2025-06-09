@@ -1,0 +1,5 @@
+import_resource_pack: "import com.flightBooking.resource."
+resource_pack : "com.flightBooking.resource."
+resource_path: "src/main/java/com/flightBooking/resource/"
+outputdir: "src/test/java/generated"
+test_config: "src/test/java/com/flightBooking/FlightBookingSystem/config1.yml"

@@ -1,0 +1,98 @@
+{
+
+"Airline": {
+
+  "custer" : "traveler_db",
+  "ui" : false,
+  "api" : true,
+  "fields" : {
+    "id": {
+
+     "name" : "id",
+     "rquired" : "true",
+     "type" : "String"
+     },
+    "g_created_by_id": {
+
+     "name" : "g_created_by_id",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "g_created_by_name": {
+
+     "name" : "g_created_by_name",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "g_modified_by_id": {
+
+     "name" : "g_modified_by_id",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "g_modified_by_name": {
+
+     "name" : "g_modified_by_name",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "g_creation_time": {
+
+     "name" : "g_creation_time",
+     "rquired" : "false",
+     "type" : "long"
+     },
+    "g_modify_time": {
+
+     "name" : "g_modify_time",
+     "rquired" : "false",
+     "type" : "long"
+     },
+    "g_soft_delete": {
+
+     "name" : "g_soft_delete",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "g_status": {
+
+     "name" : "g_status",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "archived": {
+
+     "name" : "archived",
+     "rquired" : "false",
+     "type" : "String"
+     },
+    "archived_time": {
+
+     "name" : "archived_time",
+     "rquired" : "false",
+     "type" : "long"
+     },
+    "name": {
+
+     "name" : "name",
+     "rquired" : "true",
+     "type" : "String"
+     },
+    "code": {
+
+     "name" : "code",
+     "rquired" : "true",
+     "type" : "String"
+     },
+    "extra_data": {
+
+     "name" : "extra_data",
+     "rquired" : "false",
+     "type" : "Map"
+     }
+   
+  }
+ }
+
+}
+
