@@ -1,5 +1,3 @@
-import Login1 from "./Login1";
-
 import "../../App.css";
 import { useContext, useEffect, useState } from "react";
 import React from "react";
@@ -7,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { LoginContext, User } from "../../context/LoginContext";
 import { login } from "../../apis/backend";
+import Login1 from "./Login1";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -99,7 +98,7 @@ const Login = () => {
 
   
     return (
-      <Login1 
+      <Login1
         formData={formData} 
         setFormData={setFormData} 
         error={error} 

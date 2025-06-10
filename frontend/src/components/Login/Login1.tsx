@@ -1,4 +1,3 @@
-
 import "../../App.css";
 // import React from "react";
 
@@ -67,7 +66,7 @@ export default function Login1(props: any) {
             {/* <p className="mb-0 m-4">Forgot Password</p> */}
             <p>
               Don't have an account?{" "}
-              <a href="#" className="text-decoration-none">
+              <a href="/signup" className="text-decoration-none">
                 Click Me
               </a>
             </p>
