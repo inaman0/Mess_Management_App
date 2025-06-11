@@ -27,7 +27,7 @@ import React, { useState } from 'react';
 
   const regex = /^(g_|archived|extra_data)/;
   const apiUrl = `${apiConfig.getResourceUrl('sick_meal')}?`
-  const metadataUrl = `${apiConfig.getResourceMetaDataUrl('Sick_meal')}?`
+  const metadataUrl = `${apiConfig.getResourceMetaDataUrl('SickMeal')}?`
   const BaseUrl = '${apiConfig.API_BASE_URL}';
   // Fetch resource data
   useEffect(() => {

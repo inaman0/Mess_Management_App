@@ -16,13 +16,13 @@ const CreateMenu_item = () => {
      const [enums, setEnums] = useState<Record<string, any[]>>({});
   const regex = /^(g_|archived|extra_data)/;
   const apiUrl = apiConfig.getResourceUrl("menu_item")
-  const metadataUrl = apiConfig.getResourceMetaDataUrl("Menu_item")
+  const metadataUrl = apiConfig.getResourceMetaDataUrl("MenuItem")
   // Fetch metadata
   useEffect(() => {
     const fetchResMetaData = async () => {
       const fetchedResources = new Set();
       const fetchedEnum = new Set();
-      console.log("fectched resources",fetchedResources)
+      // console.log("fectched resources",fetchedResources)
       try {
         const data = await fetch(
           metadataUrl,
@@ -31,11 +31,12 @@ const CreateMenu_item = () => {
             headers: { 'Content-Type': 'application/json' },
           }
         );
-
+        console.log(data)
         if (data.ok) {
           const metaData = await data.json();
           setResMetaData(metaData);
           setFields(metaData[0].fieldValues);
+          console.log(fields)
           const foreignFields = metaData[0].fieldValues.filter((field: any) => field.foreign);
           console.log("foreign fields",foreignFields)
           for (const field of foreignFields) {
@@ -65,7 +66,7 @@ const CreateMenu_item = () => {
   }, []);
 
   useEffect(()=>{
-    console.log("data to save",dataToSave)
+    // console.log("data to save",dataToSave)
   },[dataToSave])
   const fetchEnumData = async (enumName: string) => {
     try {
@@ -159,6 +160,7 @@ const CreateMenu_item = () => {
       
     <div className="container mt-4">
       {fields.map((field, index) => {
+        console.log("field",field)
         if (field.name !== 'id' && !regex.test(field.name)) {
           if (field.foreign) {
             console.log("FK",foreignkeyData)

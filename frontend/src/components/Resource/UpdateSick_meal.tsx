@@ -52,7 +52,7 @@ export type ResourceMetaData = {
   const [showToast, setShowToast] = useState<any>(false);
   const navigate = useNavigate();
   const apiUrl = `${apiConfig.getResourceUrl('sick_meal')}?`
-  const metadataUrl = `${apiConfig.getResourceMetaDataUrl('Sick_meal')}?`
+  const metadataUrl = `${apiConfig.getResourceMetaDataUrl('SickMeal')}?`
   const BaseUrl = `${apiConfig.API_BASE_URL}`;
   const regex = /^(g_|archived|extra_data)/;
 
