@@ -16,6 +16,7 @@ const CreateUser = () => {
   const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
   const [enums, setEnums] = useState<Record<string, any[]>>({});
   const regex = /^(g_|archived|extra_data)/;
+  const [isUser, setIsUser] = useState<boolean>(false);
 
   const apiUrl = apiConfig.getResourceUrl("user");
   const metadataUrl = apiConfig.getResourceMetaDataUrl("User");
@@ -130,6 +131,7 @@ const CreateUser = () => {
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
       setDataToSave({});
+      setIsUser(false);
     }
   };
 
@@ -146,87 +148,75 @@ const CreateUser = () => {
         <div className="card-body">
           {fields.map((field, index) => {
             if (field.name !== 'id' && !regex.test(field.name)) {
-              if (field.foreign) {
-                const options = foreignkeyData[field.foreign] || [];
-                const filteredOptions = options.filter((option) =>
-                  option[field.foreign_field]
-                    ?.toLowerCase()
-                    .includes((searchQueries[field.name] || '').toLowerCase())
-                );
-
+              if(field.name === 'Email'){
                 return (
-                  <div key={index} className="mb-3">
-                    <label className="form-label">
-                      {field.required && <span className="text-danger">*</span>} {field.name}
-                    </label>
-                    <div className="dropdown">
-                      <button
-                        className="btn btn-outline-secondary dropdown-toggle w-100 text-start"
-                        type="button"
-                        id={`dropdown-${field.name}`}
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {dataToSave[field.name]
-                          ? options.find((item) => item[field.foreign_field] === dataToSave[field.name])?.[field.foreign_field] || 'Select'
-                          : `Select ${field.name}`}
-                      </button>
-                      <ul className="dropdown-menu w-100" aria-labelledby={`dropdown-${field.name}`}>
-                        <li className="px-2">
+                        <div key={index} className="mb-3">
+                          <label className="form-label">
+                            {field.required && <span className="text-danger">*</span>} {field.name}
+                          </label>
                           <input
-                            type="text"
-                            className="form-control mb-2"
-                            placeholder={`Search ${field.name}`}
-                            value={searchQueries[field.name] || ''}
-                            onChange={(e) => handleSearchChange(field.name, e.target.value)}
+                            type={field.type}
+                            name={field.name}
+                            className="form-control"
+                            required={field.required}
+                            placeholder={field.name}
+                            value={dataToSave[field.name] || ''}
+                            onChange={(e) =>
+                              setDataToSave({ ...dataToSave, [e.target.name]: e.target.value })
+                            }
                           />
-                        </li>
-                        {filteredOptions.length > 0 ? (
-                          filteredOptions.map((option, i) => (
-                            <li key={i}>
-                              <button
-                                className="dropdown-item"
-                                type="button"
-                                onClick={() =>
-                                  setDataToSave({ ...dataToSave, [field.name]: option[field.foreign_field] })
-                                }
-                              >
-                                {option[field.foreign_field]}
-                              </button>
-                            </li>
-                          ))
-                        ) : (
-                          <li className="dropdown-item text-muted">No options available</li>
-                        )}
-                      </ul>
-                    </div>
-                  </div>
-                );
-              } else if (field.isEnum === true) {
+                        </div>
+                      );
+              }
+              if(field.name === 'Name'){
                 return (
-                  <div key={index} className="mb-3">
-                    <label className="form-label">
-                      {field.required && <span className="text-danger">*</span>} {field.name}
-                    </label>
-                    <select
-                      className="form-select"
-                      name={field.name}
-                      required={field.required}
-                      value={dataToSave[field.name] || ''}
-                      onChange={(e) =>
-                        setDataToSave({ ...dataToSave, [e.target.name]: e.target.value })
-                      }
-                    >
-                      <option value="">Select {field.name}</option>
-                      {enums[field.possible_value]?.map((enumValue: any, idx: number) => (
-                        <option key={idx} value={enumValue}>
-                          {enumValue}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                );
-              } else {
+                        <div key={index} className="mb-3">
+                          <label className="form-label">
+                            {field.required && <span className="text-danger">*</span>} {field.name}
+                          </label>
+                          <input
+                            type={field.type}
+                            name={field.name}
+                            className="form-control"
+                            required={field.required}
+                            placeholder={field.name}
+                            value={dataToSave[field.name] || ''}
+                            onChange={(e) =>
+                              setDataToSave({ ...dataToSave, [e.target.name]: e.target.value })
+                            }
+                          />
+                        </div>
+                      );
+              }
+              else if (field.isEnum === true) {
+                    return (
+                      <div key={index} className="mb-3">
+                        <label className="form-label">
+                          {field.required && <span className="text-danger">*</span>} {field.name}
+                        </label>
+                        <select
+                          className="form-select"
+                          name={field.name}
+                          required={field.required}
+                          value={dataToSave[field.name] || ''}
+                          onChange={(e) =>{
+                            setDataToSave({ ...dataToSave, [e.target.name]: e.target.value })
+                            if(e.target.value === 'User') setIsUser(true)
+                            else setIsUser(false);
+                            }
+                          }
+                        >
+                          <option value="">Select {field.name}</option>
+                          {enums[field.possible_value]?.map((enumValue: any, idx: number) => (
+                            <option key={idx} value={enumValue}>
+                              {enumValue}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    );
+                  }
+              else if(field.name === 'Room_no' && isUser) {
                 return (
                   <div key={index} className="mb-3">
                     <label className="form-label">
@@ -246,6 +236,7 @@ const CreateUser = () => {
                   </div>
                 );
               }
+
             }
             return null;
           })}

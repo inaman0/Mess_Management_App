@@ -4,23 +4,24 @@ import Page6 from "./components/Page6";
 import Page5 from "./components/Page5";
 import Page4 from "./components/Page4";
 import Page3 from "./components/Page3";
-import Page2 from "./components/Page2";
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup";
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Edit from './components/Edit/Edit';
+import Feedback from "./components/Feedback";
+import Page1 from "./components/Page1";
 
 
 
 function App() {
   return (
     <Routes>
-      
+      <Route path='/page1' element={<Page1 />}/>
       <Route path='/edit' element={<Edit/>}/>
       <Route path='/signup' element={<Signup />}/>
       <Route path='/login' element={<Login />}/>
-      <Route path='/page2' element={<Page2 />}/>
+      <Route path='/feedback' element={<Feedback />}/>
       <Route path='/page3' element={<Page3 />}/>
       <Route path='/page4' element={<Page4 />}/>
       <Route path='/page5' element={<Page5 />}/>
