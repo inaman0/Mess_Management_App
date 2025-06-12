@@ -1,5 +1,6 @@
 import React from 'react'
-import CreateFeedback from './Resource/CreateFeedback'
+import CreateFeedback from '../../components/Resource/CreateFeedback'
+
 
 const Feedback = () => {
   return (

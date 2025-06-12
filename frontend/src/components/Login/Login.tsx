@@ -81,7 +81,7 @@ const Login = () => {
       const value = sessionStorage.getItem("key");
       console.log("Ssid after submit:",value); // Output: value
       if(ssid){
-        navigate("/page1");
+        navigate("/");
       }
       
     } else if (lowerCaseName !== "admin@rasp.com") {
