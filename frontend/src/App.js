@@ -14,6 +14,13 @@ import Feedback from "./user/pages/Feedback";
 import Mainlayout from "./user/layouts/Mainlayout";
 import Home from "./user/pages/Home";
 import Sickmeal from "./user/pages/SickMeal";
+import AdminLayout from "./admin/layouts/AdminLayout";
+import UploadMenu from "./admin/pages/UploadMenu";
+import AddFeast from "./admin/pages/AddFeast";
+import EditMenu from "./admin/pages/EditMenu";
+import WeeklyRatings from "./admin/pages/WeeklyRatings";
+import Page404 from "./admin/pages/Page404";
+import Feedbacks from "./admin/pages/Feedbacks";
 
 function App() {
   return (
@@ -34,6 +41,17 @@ function App() {
         <Route path='/feedback' element={<Feedback />} />
         <Route path='/sickmeal' element={<Sickmeal />} />
       </Route>
+      
+       {/* Admin routes */}
+      <Route path='/admin' element={<AdminLayout />}>
+        <Route index element={<UploadMenu />} />           {/* /admin */}
+        <Route path='add-feast' element={<AddFeast />} />   {/* /admin/add-feast */}
+        <Route path='edit-menu' element={<EditMenu />} />   {/* /admin/edit-menu */}
+        <Route path='weeks-menu' element={<WeeklyRatings />} /> {/* /admin/weeks-menu */}
+        <Route path='feedbacks' element={<Feedbacks />} />    {/* /admin/feedback */}
+        <Route path='*' element={<Page404 />} />            {/* Catch-all for /admin */}
+      </Route>
+
     </Routes>
   );
 }
