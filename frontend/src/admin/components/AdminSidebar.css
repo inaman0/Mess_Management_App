@@ -37,6 +37,11 @@
 .sidebar-toggle {
   z-index: 1100;
   position: relative;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-toggle.open {
+  transform: rotate(-90deg);
 }
 
 /* Nav styling */

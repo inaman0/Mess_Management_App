@@ -10,12 +10,13 @@ const AdminSidebar = () => {
   return (
     <>
       {/* Toggle Button */}
-      <button
-        className="sidebar-toggle btn btn-outline-primary m-3"
+     <button
+        className={`sidebar-toggle btn btn-outline-primary m-3 ${isOpen ? 'open' : ''}`}
         onClick={toggleSidebar}
       >
         ☰
       </button>
+
 
       {/* Sidebar Overlay */}
       <div
