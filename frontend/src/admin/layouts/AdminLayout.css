@@ -1,9 +1,0 @@
-.admin-layout {
-  position: relative;
-}
-
-.admin-content {
-  position: absolute;
-  left: 20px;
-  z-index: 1;
-}
