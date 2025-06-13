@@ -10,7 +10,7 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Edit from './components/Edit/Edit';
 
-import Feedback from "./user/pages/Feedback";
+// import Feedback from "./user/pages/Feedback";
 import Mainlayout from "./user/layouts/Mainlayout";
 import Home from "./user/pages/Home";
 import Sickmeal from "./user/pages/SickMeal";
@@ -19,7 +19,8 @@ import AddFeast from "./admin/pages/AddFeast";
 import EditMenu from "./admin/pages/EditMenu";
 import WeeklyRatings from "./admin/pages/WeeklyRatings";
 import Page404 from "./admin/pages/Page404";
-import Feedbacks from "./admin/pages/Feedbacks";
+import Feedback from "./admin/pages/Feedback";
+import AdminLayout from "./admin/layouts/AdminLayout";
 
 function App() {
   return (
@@ -37,19 +38,19 @@ function App() {
       <Route path='/login' element={<Login />}/>
       <Route path='/' element={<Mainlayout/>}>
         <Route index element={<Home />} />
-        <Route path='feedback' element={<Feedback />} />
+        {/* <Route path='feedback' element={<Feedback />} /> */}
         <Route path='sickmeal' element={<Sickmeal />} />
       </Route>
       
       {/* Admin routes */}
-      {/* <Route path='/admin' element={<AdminLayout />}>
+      <Route path='/admin' element={<AdminLayout />}>
         <Route index element={<UploadMenu />} />
         <Route path='add-feast' element={<AddFeast />} />
         <Route path='edit-menu' element={<EditMenu />} />
         <Route path='weeks-menu' element={<WeeklyRatings />} />
-        <Route path='feedbacks' element={<Feedbacks />} />
+        <Route path='feedback' element={<Feedback />} />
         <Route path='*' element={<Page404 />} />
-      </Route> */}
+      </Route>
     </Routes>
   );
 }
