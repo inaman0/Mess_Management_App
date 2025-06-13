@@ -14,7 +14,6 @@ import Feedback from "./user/pages/Feedback";
 import Mainlayout from "./user/layouts/Mainlayout";
 import Home from "./user/pages/Home";
 import Sickmeal from "./user/pages/SickMeal";
-import AdminLayout from "./admin/layouts/AdminLayout";
 import UploadMenu from "./admin/pages/UploadMenu";
 import AddFeast from "./admin/pages/AddFeast";
 import EditMenu from "./admin/pages/EditMenu";
@@ -38,22 +37,20 @@ function App() {
       <Route path='/login' element={<Login />}/>
       <Route path='/' element={<Mainlayout/>}>
         <Route index element={<Home />} />
-        <Route path='/feedback' element={<Feedback />} />
-        <Route path='/sickmeal' element={<Sickmeal />} />
+        <Route path='feedback' element={<Feedback />} />
+        <Route path='sickmeal' element={<Sickmeal />} />
       </Route>
       
-       {/* Admin routes */}
-      <Route path='/admin' element={<AdminLayout />}>
-        <Route index element={<UploadMenu />} />           {/* /admin */}
-        <Route path='add-feast' element={<AddFeast />} />   {/* /admin/add-feast */}
-        <Route path='edit-menu' element={<EditMenu />} />   {/* /admin/edit-menu */}
-        <Route path='weeks-menu' element={<WeeklyRatings />} /> {/* /admin/weeks-menu */}
-        <Route path='feedbacks' element={<Feedbacks />} />    {/* /admin/feedback */}
-        <Route path='*' element={<Page404 />} />            {/* Catch-all for /admin */}
-      </Route>
-
+      {/* Admin routes */}
+      {/* <Route path='/admin' element={<AdminLayout />}>
+        <Route index element={<UploadMenu />} />
+        <Route path='add-feast' element={<AddFeast />} />
+        <Route path='edit-menu' element={<EditMenu />} />
+        <Route path='weeks-menu' element={<WeeklyRatings />} />
+        <Route path='feedbacks' element={<Feedbacks />} />
+        <Route path='*' element={<Page404 />} />
+      </Route> */}
     </Routes>
   );
 }
-
 export default App;
