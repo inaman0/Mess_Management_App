@@ -25,31 +25,30 @@ import AdminLayout from "./admin/layouts/AdminLayout";
 function App() {
   return (
     <Routes>
-      {/* <Route path='/home' element={<Home />}/>
-      
+      <Route path='/home' element={<Home />}/>
       <Route path='/page3' element={<Page3 />}/>
       <Route path='/page4' element={<Page4 />}/>
       <Route path='/page5' element={<Page5 />}/>
       <Route path='/page6' element={<Page6 />}/>
       <Route path='/page7' element={<Page7 />}/>
-      <Route path='/page8' element={<Page8 />}/> */}
+      <Route path='/page8' element={<Page8 />}/>
       <Route path='/edit' element={<Edit/>}/>
       <Route path='/signup' element={<Signup />}/>
       <Route path='/login' element={<Login />}/>
       <Route path='/' element={<Mainlayout/>}>
-        <Route index element={<Home />} />
-        {/* <Route path='feedback' element={<Feedback />} /> */}
+      <Route index element={<Home />} />
+        <Route path='feedback' element={<Feedback />} />
         <Route path='sickmeal' element={<Sickmeal />} />
       </Route>
       
       {/* Admin routes */}
       <Route path='/admin' element={<AdminLayout />}>
         <Route index element={<UploadMenu />} />
-        <Route path='add-feast' element={<AddFeast />} />
-        <Route path='edit-menu' element={<EditMenu />} />
-        <Route path='weeks-menu' element={<WeeklyRatings />} />
-        <Route path='feedback' element={<Feedback />} />
-        <Route path='*' element={<Page404 />} />
+        <Route path='/admin/add-feast' element={<AddFeast />} />
+        <Route path='/admin/edit-menu' element={<EditMenu />} />
+        <Route path='/admin/weeks-menu' element={<WeeklyRatings />} />
+        <Route path='/admin/feedback' element={<Feedback />} />
+        <Route path='/admin/*' element={<Page404 />} />
       </Route>
     </Routes>
   );
