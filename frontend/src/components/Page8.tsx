@@ -9,7 +9,7 @@
             
             import UpdateReview from './Resource/UpdateReview';
             export default function Page8() {
-          const navigate = useNavigate();
+            const navigate = useNavigate();
 
           return (
             <>

@@ -1,8 +1,8 @@
-import React from 'react'
+import FileUploader from '../components/FileUploader'
 
 const UploadMenu = () => {
   return (
-    <div>UploadMenu</div>
+    <FileUploader acceptedFileType=".xlsx" uploadUrl="/api/admin/menu" />
   )
 }
 
