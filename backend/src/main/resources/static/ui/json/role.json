@@ -1,0 +1,19 @@
+{
+
+"role": {
+
+  "purpose" : "POSSIBLE_VALUE",
+  "values" : {
+    "User": {
+
+     "id":"User", 
+      "name":"User" 
+   },
+    "Admin": {
+
+     "id":"Admin", 
+      "name":"Admin" 
+   }
+}
+}
+}

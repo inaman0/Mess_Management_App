@@ -38,7 +38,9 @@ import com.flightBooking.service.*;
 	private String archived = null;
 	private Long archived_time = null;
 	private String Meal_id = null;
-	private String Dish_id = null;
+	private String Dish_name = null;
+	private Boolean Is_veg = null;
+	private String type = null;
 	private Map<String, Object> extra_data = null;
 
 	public static String FIELD_ID = "id";
@@ -53,7 +55,9 @@ import com.flightBooking.service.*;
 	public static String FIELD_ARCHIVED = "archived";
 	public static String FIELD_ARCHIVED_TIME = "archived_time";
 	public static String FIELD_MEAL_ID = "Meal_id";
-	public static String FIELD_DISH_ID = "Dish_id";
+	public static String FIELD_DISH_NAME = "Dish_name";
+	public static String FIELD_IS_VEG = "Is_veg";
+	public static String FIELD_TYPE = "type";
 	public static String FIELD_EXTRA_DATA = "extra_data";
 
 	private static final long serialVersionUID = 1L;
@@ -114,10 +118,19 @@ import com.flightBooking.service.*;
 		Meal_idField.setForeign(new Foreign("Meal"));
 		metaData.addField(Meal_idField);
 
-		Field Dish_idField = new Field("Dish_id", "String");
-		Dish_idField.setRequired(true);
-		Dish_idField.setForeign(new Foreign("Dish"));
-		metaData.addField(Dish_idField);
+		Field Dish_nameField = new Field("Dish_name", "String");
+		Dish_nameField.setRequired(true);
+		metaData.addField(Dish_nameField);
+
+		Field Is_vegField = new Field("Is_veg", "Boolean");
+		Is_vegField.setRequired(true);
+		metaData.addField(Is_vegField);
+
+		Field typeField = new Field("type", "String");
+		typeField.setEnum(true);
+		typeField.setPossible_value("Dish_type");
+		typeField.setRequired(true);
+		metaData.addField(typeField);
 
 		Field extra_dataField = new Field("extra_data", "Map");
 		extra_dataField.setValueType("Object");
@@ -126,7 +139,7 @@ import com.flightBooking.service.*;
 
 		metaData.setTableName("menu_item");
 
-		metaData.setCluster("traveler_db");
+		metaData.setCluster("MessManagement");
 	}
 
 	public MenuItem() {this.setId(Util.getUniqueId());}
@@ -145,7 +158,9 @@ import com.flightBooking.service.*;
 		this.archived = obj.archived;
 		this.archived_time = obj.archived_time;
 		this.Meal_id = obj.Meal_id;
-		this.Dish_id = obj.Dish_id;
+		this.Dish_name = obj.Dish_name;
+		this.Is_veg = obj.Is_veg;
+		this.type = obj.type;
 		this.extra_data = obj.extra_data;
 	}
 
@@ -185,8 +200,12 @@ import com.flightBooking.service.*;
 			map.put("archived_time", archived_time);
 		if(Meal_id != null)
 			map.put("Meal_id", Meal_id);
-		if(Dish_id != null)
-			map.put("Dish_id", Dish_id);
+		if(Dish_name != null)
+			map.put("Dish_name", Dish_name);
+		if(Is_veg != null)
+			map.put("Is_veg", Is_veg);
+		if(type != null)
+			map.put("type", type);
 		if(extra_data != null)
 			map.put("extra_data", extra_data);
 		return map;
@@ -217,8 +236,12 @@ import com.flightBooking.service.*;
 			map.put("archived_time", archived_time);
 		if(validateMeal_id(add))
 			map.put("Meal_id", Meal_id);
-		if(validateDish_id(add))
-			map.put("Dish_id", Dish_id);
+		if(validateDish_name(add))
+			map.put("Dish_name", Dish_name);
+		if(validateIs_veg(add))
+			map.put("Is_veg", Is_veg);
+		if(validateType(add))
+			map.put("type", type);
 		if(extra_data != null)
 			map.put("extra_data", extra_data);
 		return map;
@@ -242,7 +265,9 @@ import com.flightBooking.service.*;
 		archived = (String) map.get("archived");
 		archived_time = (map.get("archived_time") == null ? null : ((Number) map.get("archived_time")).longValue());
 		Meal_id = (String) map.get("Meal_id");
-		Dish_id = (String) map.get("Dish_id");
+		Dish_name = (String) map.get("Dish_name");
+		Is_veg = (Boolean) map.get("Is_veg");
+		type = (String) map.get("type");
 		extra_data = (Map<String, Object>) map.get("extra_data");
 	}
 
@@ -296,9 +321,17 @@ import com.flightBooking.service.*;
 		if(Meal_idObj != null)
 			Meal_id = Meal_idObj.toString();
 
-		Object Dish_idObj = map.get("Dish_id");
-		if(Dish_idObj != null)
-			Dish_id = Dish_idObj.toString();
+		Object Dish_nameObj = map.get("Dish_name");
+		if(Dish_nameObj != null)
+			Dish_name = Dish_nameObj.toString();
+
+		Object Is_vegObj = map.get("Is_veg");
+		if(Is_vegObj != null)
+			Is_veg = new Boolean(Is_vegObj.toString());
+
+		Object typeObj = map.get("type");
+		if(typeObj != null)
+			type = typeObj.toString();
 
 		extra_data = (Map<String, Object>) map.get("extra_data");
 	}
@@ -520,26 +553,66 @@ import com.flightBooking.service.*;
 		return Meal_id != null;
 	}
 
-	public String getDish_id() {
-		return Dish_id;
+	public String getDish_name() {
+		return Dish_name;
 	}
 
-	public String getDish_idEx() {
-		return Dish_id != null ? Dish_id : "";
+	public String getDish_nameEx() {
+		return Dish_name != null ? Dish_name : "";
 	}
 
-	public void setDish_id(String Dish_id) {
-		this.Dish_id = Dish_id;
+	public void setDish_name(String Dish_name) {
+		this.Dish_name = Dish_name;
 	}
 
-	public void unSetDish_id() {
-		this.Dish_id = null;
+	public void unSetDish_name() {
+		this.Dish_name = null;
 	}
 
-	public boolean validateDish_id(boolean add) throws ApplicationException {
-		if(add && Dish_id == null)
-			throw new ApplicationException(ExceptionSeverity.ERROR, "Requierd validation Failed[Dish_id]");
-		return Dish_id != null;
+	public boolean validateDish_name(boolean add) throws ApplicationException {
+		if(add && Dish_name == null)
+			throw new ApplicationException(ExceptionSeverity.ERROR, "Requierd validation Failed[Dish_name]");
+		return Dish_name != null;
+	}
+
+	public Boolean getIs_veg() {
+		return Is_veg;
+	}
+
+	public void setIs_veg(Boolean Is_veg) {
+		this.Is_veg = Is_veg;
+	}
+
+	public void unSetIs_veg() {
+		this.Is_veg = null;
+	}
+
+	public boolean validateIs_veg(boolean add) throws ApplicationException {
+		if(add && Is_veg == null)
+			throw new ApplicationException(ExceptionSeverity.ERROR, "Requierd validation Failed[Is_veg]");
+		return Is_veg != null;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public String getTypeEx() {
+		return type != null ? type : "";
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void unSetType() {
+		this.type = null;
+	}
+
+	public boolean validateType(boolean add) throws ApplicationException {
+		if(add && type == null)
+			throw new ApplicationException(ExceptionSeverity.ERROR, "Requierd validation Failed[type]");
+		return type != null;
 	}
 
 	public Map<String, Object> getExtra_data() {
@@ -564,7 +637,7 @@ import com.flightBooking.service.*;
 		this.extra_data = null;
 	}
 	public String getCluster() {
-		return "traveler_db";
+		return "MessManagement";
 	}
 	public String getClusterType() {
 		return "REPLICATED";
