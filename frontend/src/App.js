@@ -21,6 +21,7 @@ import WeeklyRatings from "./admin/pages/WeeklyRatings";
 import Page404 from "./admin/pages/Page404";
 import Feedback from "./admin/pages/Feedback";
 import AdminLayout from "./admin/layouts/AdminLayout";
+import Menu from "./user/components/Menu";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
       <Route index element={<Home />} />
         <Route path='feedback' element={<Feedback />} />
         <Route path='sickmeal' element={<Sickmeal />} />
+        <Route path='menu' element={<Menu />} />
       </Route>
       
       {/* Admin routes */}
