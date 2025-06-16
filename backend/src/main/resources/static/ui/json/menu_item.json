@@ -22,11 +22,7 @@
         "required": "true",
         "type": "String"
       },
-      "Is_veg": {
-        "name": "Is_veg",
-        "required": "true",
-        "type": "Boolean"
-      },
+
       "type": {
         "name": "type",
         "required": "true",

@@ -39,7 +39,6 @@ import com.flightBooking.service.*;
 	private Long archived_time = null;
 	private String Meal_id = null;
 	private String Dish_name = null;
-	private Boolean Is_veg = null;
 	private String type = null;
 	private Map<String, Object> extra_data = null;
 
@@ -56,7 +55,6 @@ import com.flightBooking.service.*;
 	public static String FIELD_ARCHIVED_TIME = "archived_time";
 	public static String FIELD_MEAL_ID = "Meal_id";
 	public static String FIELD_DISH_NAME = "Dish_name";
-	public static String FIELD_IS_VEG = "Is_veg";
 	public static String FIELD_TYPE = "type";
 	public static String FIELD_EXTRA_DATA = "extra_data";
 
@@ -122,10 +120,6 @@ import com.flightBooking.service.*;
 		Dish_nameField.setRequired(true);
 		metaData.addField(Dish_nameField);
 
-		Field Is_vegField = new Field("Is_veg", "Boolean");
-		Is_vegField.setRequired(true);
-		metaData.addField(Is_vegField);
-
 		Field typeField = new Field("type", "String");
 		typeField.setEnum(true);
 		typeField.setPossible_value("Dish_type");
@@ -159,7 +153,6 @@ import com.flightBooking.service.*;
 		this.archived_time = obj.archived_time;
 		this.Meal_id = obj.Meal_id;
 		this.Dish_name = obj.Dish_name;
-		this.Is_veg = obj.Is_veg;
 		this.type = obj.type;
 		this.extra_data = obj.extra_data;
 	}
@@ -202,8 +195,6 @@ import com.flightBooking.service.*;
 			map.put("Meal_id", Meal_id);
 		if(Dish_name != null)
 			map.put("Dish_name", Dish_name);
-		if(Is_veg != null)
-			map.put("Is_veg", Is_veg);
 		if(type != null)
 			map.put("type", type);
 		if(extra_data != null)
@@ -238,8 +229,6 @@ import com.flightBooking.service.*;
 			map.put("Meal_id", Meal_id);
 		if(validateDish_name(add))
 			map.put("Dish_name", Dish_name);
-		if(validateIs_veg(add))
-			map.put("Is_veg", Is_veg);
 		if(validateType(add))
 			map.put("type", type);
 		if(extra_data != null)
@@ -266,7 +255,6 @@ import com.flightBooking.service.*;
 		archived_time = (map.get("archived_time") == null ? null : ((Number) map.get("archived_time")).longValue());
 		Meal_id = (String) map.get("Meal_id");
 		Dish_name = (String) map.get("Dish_name");
-		Is_veg = (Boolean) map.get("Is_veg");
 		type = (String) map.get("type");
 		extra_data = (Map<String, Object>) map.get("extra_data");
 	}
@@ -324,10 +312,6 @@ import com.flightBooking.service.*;
 		Object Dish_nameObj = map.get("Dish_name");
 		if(Dish_nameObj != null)
 			Dish_name = Dish_nameObj.toString();
-
-		Object Is_vegObj = map.get("Is_veg");
-		if(Is_vegObj != null)
-			Is_veg = new Boolean(Is_vegObj.toString());
 
 		Object typeObj = map.get("type");
 		if(typeObj != null)
@@ -573,24 +557,6 @@ import com.flightBooking.service.*;
 		if(add && Dish_name == null)
 			throw new ApplicationException(ExceptionSeverity.ERROR, "Requierd validation Failed[Dish_name]");
 		return Dish_name != null;
-	}
-
-	public Boolean getIs_veg() {
-		return Is_veg;
-	}
-
-	public void setIs_veg(Boolean Is_veg) {
-		this.Is_veg = Is_veg;
-	}
-
-	public void unSetIs_veg() {
-		this.Is_veg = null;
-	}
-
-	public boolean validateIs_veg(boolean add) throws ApplicationException {
-		if(add && Is_veg == null)
-			throw new ApplicationException(ExceptionSeverity.ERROR, "Requierd validation Failed[Is_veg]");
-		return Is_veg != null;
 	}
 
 	public String getType() {

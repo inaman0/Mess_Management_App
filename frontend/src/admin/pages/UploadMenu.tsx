@@ -1,9 +1,9 @@
-import FileUploader from '../components/FileUploader'
+import MenuUploader from '../components/FileUploader'
 
 const UploadMenu = () => {
   return (
-    <FileUploader acceptedFileType=".xlsx" uploadUrl="/api/admin/menu" />
-  )
-}
+    <MenuUploader acceptedFileType='.xlsx' uploadUrlMenu='/api/admin/menu' uploadUrlMeal='/api/admin/meal' uploadUrlMealItem='/api/admin/meal-item' />
+  );
+};
 
 export default UploadMenu
