@@ -238,7 +238,7 @@ const CreateFeedback = () => {
                       name={field.name}
                       required={field.required}
                       placeholder={field.name}
-                      value={dataToSave[field.name] || getFormattedDate()}
+                      value={dataToSave[field.name] || ''}
                       onChange={(e) => setDataToSave({ ...dataToSave, [e.target.name]: e.target.value })}
                     />
                   </div>
@@ -325,7 +325,7 @@ const CreateFeedback = () => {
                 className="btn-close"
                 onClick={() => {
                   setShowToast(false);
-                  navigate('/login'); // Redirect to login page after showing the toast
+                  navigate('/'); // Redirect to login page after showing the toast
                   setDataToSave({}); // Reset the form data
                 }}
               ></button>

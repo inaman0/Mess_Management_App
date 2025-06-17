@@ -28,7 +28,7 @@ const Sidebar = () => {
             <Link to="/menu" className={`nav-link mb-2 ${location.pathname === '/menu' ? 'active' : ''}`}>
               Today's Menu
             </Link>
-            <Link to="/weeks-menu" className={`nav-link mb-2 ${location.pathname === '/weeks-menu' ? 'active' : ''}`}>
+            <Link to="#" className={`nav-link mb-2 ${location.pathname === '/weeks-menu' ? 'active' : ''}`}>
               Week's Menu
             </Link>
             <Link to="/sickmeal" className={`nav-link mb-2 ${location.pathname === '/sickmeal' ? 'active' : ''}`}>

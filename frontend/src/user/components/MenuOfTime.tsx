@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import apiConfig from '../../config/apiConfig'
-import MealMenuCard from './MealMenuCard'
+import React, { useEffect, useState } from 'react';
+import apiConfig from '../../config/apiConfig';
+import MealMenuCard from './MealMenuCard';
 import { useNavigate } from 'react-router-dom';
 
 interface MenuItem {
@@ -13,12 +13,7 @@ interface MenuItem {
 interface MealData {
   id: string;
   Meal_type: string;
-  Menu_id: string;
-}
-
-interface Menu {
-  id: string;
-  Date: Date;
+  Date: Date; // Changed from Menu_id to Date
 }
 
 const MEAL_TIME_RANGES = {
@@ -44,16 +39,13 @@ const getCurrentMealType = (): string => {
 const MenuOfTime = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [meals, setMeals] = useState<MealData[]>([]);
-  const [menus, setMenus] = useState<Menu[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentMealType, setCurrentMealType] = useState('');
 
   const apiUrl = `${apiConfig.getResourceUrl('menu_item')}?`;
   const apiMealUrl = `${apiConfig.getResourceUrl('meal')}?`;
-  const apiMenuUrl = `${apiConfig.getResourceUrl('menu')}?`;
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCurrentMealType(getCurrentMealType());
@@ -64,7 +56,7 @@ const MenuOfTime = () => {
     return () => clearInterval(interval);
   }, []);
 
-  //Simple date comparison function
+  // Simple date comparison function
   const isSameDate = (date1: Date, date2: Date) => {
     return (
       date1.getFullYear() === date2.getFullYear() &&
@@ -84,31 +76,26 @@ const MenuOfTime = () => {
         params.append('queryId', 'GET_ALL');
         params.append('session_id', ssid);
 
-        const [menuResponse, mealResponse, menuRes] = await Promise.all([
+        const [menuResponse, mealResponse] = await Promise.all([
           fetch(apiUrl + params.toString()),
-          fetch(apiMealUrl + params.toString()),
-          fetch(apiMenuUrl + params.toString())
+          fetch(apiMealUrl + params.toString())
         ]);
 
-        if (!menuResponse.ok || !mealResponse.ok || !menuRes.ok) {
+        if (!menuResponse.ok || !mealResponse.ok) {
           throw new Error('Failed to fetch data');
         }
 
         const menuData = await menuResponse.json();
         const mealData = await mealResponse.json();
-        const menuDataRes = await menuRes.json();
-
-        // console.log(menuData);
 
         // Parse dates from API response
-        const parsedMenus = menuDataRes.resource?.map((menu: any) => ({
-          ...menu,
-          Date: new Date(menu.Date)
+        const parsedMeals = mealData.resource?.map((meal: any) => ({
+          ...meal,
+          Date: new Date(meal.Date)
         })) || [];
 
         setMenuItems(menuData.resource || []);
-        setMeals(mealData.resource || []);
-        setMenus(parsedMenus);
+        setMeals(parsedMeals);
       } catch (error) {
         console.error('Error fetching resources:', error);
         setError('Failed to load menu. Please try again later.');
@@ -120,15 +107,9 @@ const MenuOfTime = () => {
     fetchAllResources();
   }, []);
 
-  // Find today's menu
+  // Filter meals to only include those for today
   const today = new Date();
-  const todayMenu = menus.find(menu => menu.Date && isSameDate(menu.Date, today));
-  const todayMenuId = todayMenu?.id;
-
-  // Filter meals to only include those for today's menu
-  const todaysMeals = todayMenuId 
-    ? meals.filter(meal => meal.Menu_id === todayMenuId)
-    : [];
+  const todaysMeals = meals.filter(meal => meal.Date && isSameDate(meal.Date, today));
 
   // Filter menu items for current meal type and today's date
   const currentMealItems = menuItems.filter(item => {
@@ -159,7 +140,6 @@ const MenuOfTime = () => {
           Give Feedback
         </button>
       </div>
-
       
       {currentMealItems.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -181,10 +161,10 @@ const MenuOfTime = () => {
       <div className="mt-8 text-sm text-gray-500">
         <p>Meal times:</p>
         <ul className="list-disc pl-5">
-          <li>Breakfast: 6 AM - 10 AM</li>
-          <li>Lunch: 10 AM - 2:30 PM</li>
-          <li>Snacks: 2:30 PM - 6 PM</li>
-          <li>Dinner: 6 PM - 10 PM</li>
+          <li>Breakfast: 7:30 AM - 9:30 AM</li>
+          <li>Lunch: 12:30 AM - 2:30 PM</li>
+          <li>Snacks: 4:30 PM - 6 PM</li>
+          <li>Dinner: 7:30 PM - 9:30 PM</li>
         </ul>
       </div>
     </div>
