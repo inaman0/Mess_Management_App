@@ -14,6 +14,7 @@ import Edit from './components/Edit/Edit';
 import Mainlayout from "./user/layouts/Mainlayout";
 import Home from "./user/pages/Home";
 import Sickmeal from "./user/pages/SickMeal";
+import UserFeedback from "./user/pages/UserFeedback";
 import UploadMenu from "./admin/pages/UploadMenu";
 import AddFeast from "./admin/pages/AddFeast";
 import EditMenu from "./admin/pages/EditMenu";
@@ -38,9 +39,9 @@ function App() {
       <Route path='/login' element={<Login />}/>
       <Route path='/' element={<Mainlayout/>}>
       <Route index element={<Home />} />
-        <Route path='feedback' element={<Feedback />} />
-        <Route path='sickmeal' element={<Sickmeal />} />
-        <Route path='menu' element={<Menu />} />
+        <Route path='/feedback' element={<UserFeedback />} />
+        <Route path='/sickmeal' element={<Sickmeal />} />
+        <Route path='/menu' element={<Menu />} />
       </Route>
       
       {/* Admin routes */}
