@@ -3,6 +3,9 @@
   margin: 0 auto;
   padding: 1.5rem;
   margin-top: 50px;
+  background-color: #f9fafb;  /* Light gray background */
+  border-radius: 0.75rem;     /* Rounded corners for the wrapper */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
 }
 
 .upload-form {

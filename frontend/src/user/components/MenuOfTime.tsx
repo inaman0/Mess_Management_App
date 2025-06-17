@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import apiConfig from '../../config/apiConfig'
 import MealMenuCard from './MealMenuCard'
+import { useNavigate } from 'react-router-dom';
 
 interface MenuItem {
   Dish_name: string;
@@ -12,6 +13,12 @@ interface MenuItem {
 interface MealData {
   id: string;
   Meal_type: string;
+  Menu_id: string;
+}
+
+interface Menu {
+  id: string;
+  Date: Date;
 }
 
 const MEAL_TIME_RANGES = {
@@ -37,12 +44,16 @@ const getCurrentMealType = (): string => {
 const MenuOfTime = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [meals, setMeals] = useState<MealData[]>([]);
+  const [menus, setMenus] = useState<Menu[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentMealType, setCurrentMealType] = useState('');
 
   const apiUrl = `${apiConfig.getResourceUrl('menu_item')}?`;
   const apiMealUrl = `${apiConfig.getResourceUrl('meal')}?`;
+  const apiMenuUrl = `${apiConfig.getResourceUrl('menu')}?`;
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     setCurrentMealType(getCurrentMealType());
@@ -52,6 +63,15 @@ const MenuOfTime = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  //Simple date comparison function
+  const isSameDate = (date1: Date, date2: Date) => {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  };
 
   useEffect(() => {
     const fetchAllResources = async () => {
@@ -64,20 +84,31 @@ const MenuOfTime = () => {
         params.append('queryId', 'GET_ALL');
         params.append('session_id', ssid);
 
-        const [menuResponse, mealResponse] = await Promise.all([
+        const [menuResponse, mealResponse, menuRes] = await Promise.all([
           fetch(apiUrl + params.toString()),
-          fetch(apiMealUrl + params.toString())
+          fetch(apiMealUrl + params.toString()),
+          fetch(apiMenuUrl + params.toString())
         ]);
 
-        if (!menuResponse.ok || !mealResponse.ok) {
+        if (!menuResponse.ok || !mealResponse.ok || !menuRes.ok) {
           throw new Error('Failed to fetch data');
         }
 
         const menuData = await menuResponse.json();
         const mealData = await mealResponse.json();
+        const menuDataRes = await menuRes.json();
+
+        // console.log(menuData);
+
+        // Parse dates from API response
+        const parsedMenus = menuDataRes.resource?.map((menu: any) => ({
+          ...menu,
+          Date: new Date(menu.Date)
+        })) || [];
 
         setMenuItems(menuData.resource || []);
         setMeals(mealData.resource || []);
+        setMenus(parsedMenus);
       } catch (error) {
         console.error('Error fetching resources:', error);
         setError('Failed to load menu. Please try again later.');
@@ -89,15 +120,22 @@ const MenuOfTime = () => {
     fetchAllResources();
   }, []);
 
-  // Create map of meal_id to meal_type
-  const mealTypeMap = meals.reduce<Record<string, string>>((acc, meal) => {
-    acc[meal.id] = meal.Meal_type;
-    return acc;
-  }, {});
+  // Find today's menu
+  const today = new Date();
+  const todayMenu = menus.find(menu => menu.Date && isSameDate(menu.Date, today));
+  const todayMenuId = todayMenu?.id;
 
-  // Filter menu items for current meal type only
+  // Filter meals to only include those for today's menu
+  const todaysMeals = todayMenuId 
+    ? meals.filter(meal => meal.Menu_id === todayMenuId)
+    : [];
+
+  // Filter menu items for current meal type and today's date
   const currentMealItems = menuItems.filter(item => {
-    return mealTypeMap[item.Meal_id] === currentMealType;
+    return todaysMeals.some(meal => 
+      meal.id === item.Meal_id && 
+      meal.Meal_type === currentMealType
+    );
   });
 
   if (isLoading) return <div className="p-4 text-center">Loading menu...</div>;
@@ -106,7 +144,22 @@ const MenuOfTime = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-3xl font-bold mb-6">Today's {currentMealType} Menu</h1>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1 className="h1 m-0">
+          Today's {currentMealType} Menu ({today.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric' 
+          })})
+        </h1>
+        <button 
+          onClick={() => navigate('/feedback')}
+          className="btn btn-primary"
+        >
+          Give Feedback
+        </button>
+      </div>
+
       
       {currentMealItems.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -120,16 +173,18 @@ const MenuOfTime = () => {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500">No items available for {currentMealType}</p>
+        <p className="text-center text-gray-500">
+          No {currentMealType} items available for today
+        </p>
       )}
 
       <div className="mt-8 text-sm text-gray-500">
         <p>Meal times:</p>
         <ul className="list-disc pl-5">
-          <li>Breakfast: 7 AM - 9:45 AM</li>
-          <li>Lunch: 12:30 AM - 2:15 PM</li>
-          <li>Snacks: 4:30 PM - 6 PM</li>
-          <li>Dinner: 7:30 PM - 9:30 PM</li>
+          <li>Breakfast: 6 AM - 10 AM</li>
+          <li>Lunch: 10 AM - 2:30 PM</li>
+          <li>Snacks: 2:30 PM - 6 PM</li>
+          <li>Dinner: 6 PM - 10 PM</li>
         </ul>
       </div>
     </div>

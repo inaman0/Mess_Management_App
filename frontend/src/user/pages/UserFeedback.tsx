@@ -2,7 +2,7 @@ import React from 'react'
 import CreateFeedback from '../../components/Resource/CreateFeedback'
 
 
-const Feedback = () => {
+const UserFeedback = () => {
   return (
     <div className='d-flex justify-content-center align-items-center vh-100'>
       <CreateFeedback />
@@ -10,4 +10,4 @@ const Feedback = () => {
   )
 }
 
-export default Feedback
+export default UserFeedback
