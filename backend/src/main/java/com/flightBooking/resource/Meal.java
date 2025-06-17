@@ -38,7 +38,8 @@ import com.flightBooking.service.*;
 	private String archived = null;
 	private Long archived_time = null;
 	private String Meal_type = null;
-	private String Menu_id = null;
+	private Date Date = null;
+	private Boolean IsFeast = null;
 	private Map<String, Object> extra_data = null;
 
 	public static String FIELD_ID = "id";
@@ -53,7 +54,8 @@ import com.flightBooking.service.*;
 	public static String FIELD_ARCHIVED = "archived";
 	public static String FIELD_ARCHIVED_TIME = "archived_time";
 	public static String FIELD_MEAL_TYPE = "Meal_type";
-	public static String FIELD_MENU_ID = "Menu_id";
+	public static String FIELD_DATE = "Date";
+	public static String FIELD_ISFEAST = "IsFeast";
 	public static String FIELD_EXTRA_DATA = "extra_data";
 
 	private static final long serialVersionUID = 1L;
@@ -115,10 +117,13 @@ import com.flightBooking.service.*;
 		Meal_typeField.setRequired(true);
 		metaData.addField(Meal_typeField);
 
-		Field Menu_idField = new Field("Menu_id", "String");
-		Menu_idField.setRequired(true);
-		Menu_idField.setForeign(new Foreign("Menu"));
-		metaData.addField(Menu_idField);
+		Field DateField = new Field("Date", "Date");
+		DateField.setRequired(true);
+		metaData.addField(DateField);
+
+		Field IsFeastField = new Field("IsFeast", "Boolean");
+		IsFeastField.setRequired(true);
+		metaData.addField(IsFeastField);
 
 		Field extra_dataField = new Field("extra_data", "Map");
 		extra_dataField.setValueType("Object");
@@ -146,7 +151,8 @@ import com.flightBooking.service.*;
 		this.archived = obj.archived;
 		this.archived_time = obj.archived_time;
 		this.Meal_type = obj.Meal_type;
-		this.Menu_id = obj.Menu_id;
+		this.Date = obj.Date;
+		this.IsFeast = obj.IsFeast;
 		this.extra_data = obj.extra_data;
 	}
 
@@ -186,8 +192,10 @@ import com.flightBooking.service.*;
 			map.put("archived_time", archived_time);
 		if(Meal_type != null)
 			map.put("Meal_type", Meal_type);
-		if(Menu_id != null)
-			map.put("Menu_id", Menu_id);
+		if(Date != null)
+			map.put("Date", Date);
+		if(IsFeast != null)
+			map.put("IsFeast", IsFeast);
 		if(extra_data != null)
 			map.put("extra_data", extra_data);
 		return map;
@@ -218,8 +226,10 @@ import com.flightBooking.service.*;
 			map.put("archived_time", archived_time);
 		if(validateMeal_type(add))
 			map.put("Meal_type", Meal_type);
-		if(validateMenu_id(add))
-			map.put("Menu_id", Menu_id);
+		if(validateDate(add))
+			map.put("Date", Date);
+		if(validateIsFeast(add))
+			map.put("IsFeast", IsFeast);
 		if(extra_data != null)
 			map.put("extra_data", extra_data);
 		return map;
@@ -243,7 +253,8 @@ import com.flightBooking.service.*;
 		archived = (String) map.get("archived");
 		archived_time = (map.get("archived_time") == null ? null : ((Number) map.get("archived_time")).longValue());
 		Meal_type = (String) map.get("Meal_type");
-		Menu_id = (String) map.get("Menu_id");
+		Date = (Date) map.get("Date");
+		IsFeast = (Boolean) map.get("IsFeast");
 		extra_data = (Map<String, Object>) map.get("extra_data");
 	}
 
@@ -297,9 +308,13 @@ import com.flightBooking.service.*;
 		if(Meal_typeObj != null)
 			Meal_type = Meal_typeObj.toString();
 
-		Object Menu_idObj = map.get("Menu_id");
-		if(Menu_idObj != null)
-			Menu_id = Menu_idObj.toString();
+		Object DateObj = map.get("Date");
+		if(DateObj != null)
+			Date = new Date(DateObj.toString());
+
+		Object IsFeastObj = map.get("IsFeast");
+		if(IsFeastObj != null)
+			IsFeast = new Boolean(IsFeastObj.toString());
 
 		extra_data = (Map<String, Object>) map.get("extra_data");
 	}
@@ -521,26 +536,40 @@ import com.flightBooking.service.*;
 		return Meal_type != null;
 	}
 
-	public String getMenu_id() {
-		return Menu_id;
+	public Date getDate() {
+		return Date;
 	}
 
-	public String getMenu_idEx() {
-		return Menu_id != null ? Menu_id : "";
+	public void setDate(Date Date) {
+		this.Date = Date;
 	}
 
-	public void setMenu_id(String Menu_id) {
-		this.Menu_id = Menu_id;
+	public void unSetDate() {
+		this.Date = null;
 	}
 
-	public void unSetMenu_id() {
-		this.Menu_id = null;
+	public boolean validateDate(boolean add) throws ApplicationException {
+		if(add && Date == null)
+			throw new ApplicationException(ExceptionSeverity.ERROR, "Requierd validation Failed[Date]");
+		return Date != null;
 	}
 
-	public boolean validateMenu_id(boolean add) throws ApplicationException {
-		if(add && Menu_id == null)
-			throw new ApplicationException(ExceptionSeverity.ERROR, "Requierd validation Failed[Menu_id]");
-		return Menu_id != null;
+	public Boolean getIsFeast() {
+		return IsFeast;
+	}
+
+	public void setIsFeast(Boolean IsFeast) {
+		this.IsFeast = IsFeast;
+	}
+
+	public void unSetIsFeast() {
+		this.IsFeast = null;
+	}
+
+	public boolean validateIsFeast(boolean add) throws ApplicationException {
+		if(add && IsFeast == null)
+			throw new ApplicationException(ExceptionSeverity.ERROR, "Requierd validation Failed[IsFeast]");
+		return IsFeast != null;
 	}
 
 	public Map<String, Object> getExtra_data() {

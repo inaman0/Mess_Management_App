@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import apiConfig from '../../config/apiConfig'
-import MealMenuCard from './MealMenuCard'
+import React, { useEffect, useState } from 'react';
+import apiConfig from '../../config/apiConfig';
+import MealMenuCard from './MealMenuCard';
 
 interface MenuItem {
   Dish_name: string;
@@ -12,24 +12,17 @@ interface MenuItem {
 interface MealData {
   id: string;      
   Meal_type: string;
-  Menu_id: string;
-}
-
-interface Menu {
-  id: string;
-  Date: Date;
+  Date: Date; // Changed to Date (capital D)
 }
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [meals, setMeals] = useState<MealData[]>([]);
-  const [menus, setMenus] = useState<Menu[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const apiUrl = `${apiConfig.getResourceUrl('menu_item')}?`;
   const apiMealUrl = `${apiConfig.getResourceUrl('meal')}?`;
-  const apiMenuUrl = `${apiConfig.getResourceUrl('menu')}?`;
 
   useEffect(() => {
     const fetchAllResources = async () => {
@@ -42,28 +35,26 @@ const Menu = () => {
         params.append('queryId', 'GET_ALL');
         params.append('session_id', ssid);
 
-        const [menuResponse, mealResponse, menuRes] = await Promise.all([
+        const [menuResponse, mealResponse] = await Promise.all([
           fetch(apiUrl + params.toString()),
-          fetch(apiMealUrl + params.toString()),
-          fetch(apiMenuUrl + params.toString())
+          fetch(apiMealUrl + params.toString())
         ]);
 
-        if (!menuResponse.ok || !mealResponse.ok || !menuRes.ok) {
+        if (!menuResponse.ok || !mealResponse.ok) {
           throw new Error('Failed to fetch data');
         }
 
         const menuData = await menuResponse.json();
         const mealData = await mealResponse.json();
-        const menuDataRes = await menuRes.json();
 
-        const parsedMenus = menuDataRes.resource?.map((menu: any) => ({
-          ...menu,
-          Date: new Date(menu.Date)
+        // Parse dates from API response - using Date (capital D)
+        const parsedMeals = mealData.resource?.map((meal: any) => ({
+          ...meal,
+          Date: new Date(meal.Date) // Changed to Date (capital D)
         })) || [];
 
         setMenuItems(menuData.resource || []);
-        setMeals(mealData.resource || []);
-        setMenus(parsedMenus);
+        setMeals(parsedMeals);
         
       } catch (error) {
         console.error('Error fetching resources:', error);
@@ -76,7 +67,7 @@ const Menu = () => {
     fetchAllResources();
   }, []);
 
-  //Date comparison function
+  // Simple date comparison function
   const isSameDate = (date1: Date, date2: Date) => {
     return (
       date1.getFullYear() === date2.getFullYear() &&
@@ -85,15 +76,9 @@ const Menu = () => {
     );
   };
 
-  // Find today's menu - using 'Date' to match your field name
+  // Filter meals to only include those for today - using Date (capital D)
   const today = new Date();
-  const todayMenu = menus.find(menu => menu.Date && isSameDate(menu.Date, today));
-  const todayMenuId = todayMenu?.id;
-
-  // Filter meals to only include those for today's menu
-  const todaysMeals = todayMenuId 
-    ? meals.filter(meal => meal.Menu_id === todayMenuId)
-    : [];
+  const todaysMeals = meals.filter(meal => meal.Date && isSameDate(meal.Date, today));
 
   // Create map of meal_id to meal_type using only today's meals
   const mealTypeMap = todaysMeals.reduce<Record<string, string>>((acc, meal) => {
@@ -102,9 +87,9 @@ const Menu = () => {
   }, {});
 
   // Filter menu items to only include those with meal IDs from today's meals
-  const todaysMenuItems = todayMenuId
-    ? menuItems.filter(item => todaysMeals.some(meal => meal.id === item.Meal_id))
-    : [];
+  const todaysMenuItems = menuItems.filter(item => 
+    todaysMeals.some(meal => meal.id === item.Meal_id)
+  );
 
   // Group today's menu items by meal type
   const groupedMenu = todaysMenuItems.reduce<Record<string, MenuItem[]>>((acc, item) => {

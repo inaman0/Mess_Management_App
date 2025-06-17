@@ -20,16 +20,18 @@
       "possible_value" :"Meal_type", 
      "type" : "String"
      },
-    "Menu_id": {
+    "Date": {
 
-     "name" : "Menu_id",
-     "required" : "true",
-     "foreign" : {
-      "resource" :"Menu" 
-      },
-     "type" : "String"
-     }
-   
+      "name" : "Date",
+      "required" : "true",
+      "type" : "Date"
+    },
+    "IsFeast": {
+
+      "name" : "IsFeast",
+      "required" : "true",
+      "type" : "Boolean"
+    }
   }
  }
 
