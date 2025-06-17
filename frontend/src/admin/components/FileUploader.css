@@ -1,11 +1,18 @@
 .uploader-wrapper {
-  max-width: 42rem;
+  max-width: 80%;  /* Increased from 42rem to cover more of the page width */
+  min-height: 75vh;  /* Makes it cover most of the viewport height */
   margin: 0 auto;
-  padding: 1.5rem;
-  margin-top: 50px;
-  background-color: #f9fafb;  /* Light gray background */
+  padding: 2rem;
+  margin-top: 100px;  /* Reduced from 50px to position it higher */
+  background-color: rgba(255, 255, 255, 0.9);;  /* Light gray background */
   border-radius: 0.75rem;     /* Rounded corners for the wrapper */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  position: relative;  /* Establishes positioning context for child elements */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* Centers child components vertically */
+  align-items: center;  /* Centers child components horizontally */
+  overflow: auto;  /* Allows scrolling if content exceeds the wrapper */
 }
 
 .upload-form {
