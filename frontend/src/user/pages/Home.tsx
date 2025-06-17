@@ -1,11 +1,13 @@
-import React from 'react'
+import Menu from '../components/Menu';
+import MenuOfTime from '../components/MenuOfTime';
 
 const Home = () => {
+  
   return (
     <div>
-      Home
+      <MenuOfTime />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

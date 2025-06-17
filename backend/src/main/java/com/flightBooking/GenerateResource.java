@@ -19,7 +19,7 @@ public class GenerateResource {
         if (args.length > 2) {
             controller_package = args[2];
         }
-        ResourceGenerator generator = new ResourceGenerator("com.flightBooking", "com/flightBooking/");
+        ResourceGenerator generator = new ResourceGenerator("com.flightBooking", "src/main/java/com/flightBooking/");
         if (!Util.isEmpty(web_app_director)) {
             generator.setWeb_app_directory(web_app_director);
         }

@@ -1,0 +1,29 @@
+{
+
+"meal_type": {
+
+  "purpose" : "POSSIBLE_VALUE",
+  "values" : {
+    "Breakfast": {
+
+     "id":"Breakfast", 
+      "name":"Breakfast" 
+   },
+    "Lunch": {
+
+     "id":"Lunch", 
+      "name":"Lunch" 
+   },
+    "Snacks": {
+
+     "id":"Snacks", 
+      "name":"Snacks" 
+   },
+    "Dinner": {
+
+     "id":"Dinner", 
+      "name":"Dinner" 
+   }
+}
+}
+}

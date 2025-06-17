@@ -17,16 +17,16 @@ import platform.webservice.Enum;
  * 
  */
 public class DishType extends BasePossibleValue {
-		public static String ID_Normal = "Normal";
-		public static String NAME_Normal = "Normal";
-		public static String ID_Dessert = "Dessert";
-		public static String NAME_Dessert = "Dessert";
-		public static String ID_Curd = "Curd";
-		public static String NAME_Curd = "Curd";
+		public static String ID_Chicken = "Chicken";
+		public static String NAME_Chicken = "Chicken";
+		public static String ID_Egg = "Egg";
+		public static String NAME_Egg = "Egg";
+		public static String ID_Veg = "Veg";
+		public static String NAME_Veg = "Veg";
 		public DishType() {super("DISH_TYPE");}
 		protected void populate() {
- 			add(new Enum(ID_Normal,NAME_Normal));
- 			add(new Enum(ID_Dessert,NAME_Dessert));
- 			add(new Enum(ID_Curd,NAME_Curd));
+ 			add(new Enum(ID_Chicken,NAME_Chicken));
+ 			add(new Enum(ID_Egg,NAME_Egg));
+ 			add(new Enum(ID_Veg,NAME_Veg));
 		}
 }

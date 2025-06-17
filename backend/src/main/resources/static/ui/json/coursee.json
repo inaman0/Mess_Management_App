@@ -1,0 +1,54 @@
+{
+  "coursee": {
+    "cluster": "exam_portal",
+    "ui": true,
+    "api": true,
+    "display_name": "Coursee Details",
+    "menu_content": "setup",
+    "blocks": {
+      "coursee": {
+        "title": "Course Details",
+        "order": 1
+      }
+    },
+
+    "fields": {
+      "id": {
+        "index": true,
+        "name": "id",
+        "required": true,
+        "type": "String"
+      },
+
+      "course_date": {
+        "index": true,
+        "name": "course_date",
+        "type": "Date"
+      },
+
+      "course_code": {
+        "index": true,
+        "name": "course_code",
+        "type": "String"
+      },
+
+      "course_credits": {
+        "name": "course_credits",
+        "type":"Integer",
+        "required": false
+      },
+
+      "status": {
+        "name": "status",
+        "type": "String",
+        "required": true
+      },
+
+      "description": {
+        "name": "description",
+        "type": "String",
+        "required": false
+      }
+    }
+  }
+}

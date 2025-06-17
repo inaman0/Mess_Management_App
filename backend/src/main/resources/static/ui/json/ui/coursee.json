@@ -1,0 +1,31 @@
+{
+			"resource" : "coursee",
+			"table" : true,
+			"tile" : false,
+			"display_name" : "Coursee Details",
+			"page_name" : {
+				"list" : "coursee",
+				"add" : "coursee",
+				"edit" : "coursee",
+				"view" : "coursee"
+			},
+			"add_required" : true,
+			"modify_required" : true,
+			"delete_required" : true,
+			"login_required" : true,
+			"list" : {
+				"fields":[
+				]
+			},
+			"form" : {
+					"blocks": [
+						{
+							"name":"coursee",
+							"order":1,
+							"fields":[
+							],
+							"title":"Course Details"
+						}
+					]
+			}
+}

@@ -127,7 +127,7 @@ import com.flightBooking.service.*;
 
 		metaData.setTableName("meal");
 
-		metaData.setCluster("traveler_db");
+		metaData.setCluster("MessManagement");
 	}
 
 	public Meal() {this.setId(Util.getUniqueId());}
@@ -565,7 +565,7 @@ import com.flightBooking.service.*;
 		this.extra_data = null;
 	}
 	public String getCluster() {
-		return "traveler_db";
+		return "MessManagement";
 	}
 	public String getClusterType() {
 		return "REPLICATED";

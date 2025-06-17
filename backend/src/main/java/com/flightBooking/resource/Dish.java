@@ -132,7 +132,7 @@ import com.flightBooking.service.*;
 
 		metaData.setTableName("dish");
 
-		metaData.setCluster("traveler_db");
+		metaData.setCluster("MessManagement");
 	}
 
 	public Dish() {this.setId(Util.getUniqueId());}
@@ -598,7 +598,7 @@ import com.flightBooking.service.*;
 		this.extra_data = null;
 	}
 	public String getCluster() {
-		return "traveler_db";
+		return "MessManagement";
 	}
 	public String getClusterType() {
 		return "REPLICATED";
