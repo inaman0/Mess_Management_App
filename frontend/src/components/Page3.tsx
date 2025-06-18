@@ -18,4 +18,4 @@
             <div className="d-flex flex-column border border-2 h-50" id="id-H"><UpdateMenu/></div>
             </>
           );
-        }
+        }  
