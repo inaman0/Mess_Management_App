@@ -2,7 +2,12 @@ import MenuUploader from '../components/FileUploader'
 
 const UploadMenu = () => {
   return (
-    <MenuUploader acceptedFileType='.xlsx' uploadUrl='/api/admin/menu'/>
+    <MenuUploader
+  acceptedFileType=".xlsx"
+  uploadUrlMeal="http://localhost:8083/api/meal"
+/>
+
+
   );
 };
 

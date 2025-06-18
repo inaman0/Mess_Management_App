@@ -29,8 +29,8 @@
     "IsFeast": {
 
       "name" : "IsFeast",
-      "required" : "true",
-      "type" : "Boolean"
+      "required" : "false",
+      "type" : "String"
     }
   }
  }

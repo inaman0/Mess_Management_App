@@ -39,7 +39,7 @@ import com.flightBooking.service.*;
 	private Long archived_time = null;
 	private String Meal_type = null;
 	private Date Date = null;
-	private Boolean IsFeast = null;
+	private String IsFeast = null;
 	private Map<String, Object> extra_data = null;
 
 	public static String FIELD_ID = "id";
@@ -121,8 +121,7 @@ import com.flightBooking.service.*;
 		DateField.setRequired(true);
 		metaData.addField(DateField);
 
-		Field IsFeastField = new Field("IsFeast", "Boolean");
-		IsFeastField.setRequired(true);
+		Field IsFeastField = new Field("IsFeast", "String");
 		metaData.addField(IsFeastField);
 
 		Field extra_dataField = new Field("extra_data", "Map");
@@ -228,7 +227,7 @@ import com.flightBooking.service.*;
 			map.put("Meal_type", Meal_type);
 		if(validateDate(add))
 			map.put("Date", Date);
-		if(validateIsFeast(add))
+		if(IsFeast != null)
 			map.put("IsFeast", IsFeast);
 		if(extra_data != null)
 			map.put("extra_data", extra_data);
@@ -254,7 +253,7 @@ import com.flightBooking.service.*;
 		archived_time = (map.get("archived_time") == null ? null : ((Number) map.get("archived_time")).longValue());
 		Meal_type = (String) map.get("Meal_type");
 		Date = (Date) map.get("Date");
-		IsFeast = (Boolean) map.get("IsFeast");
+		IsFeast = (String) map.get("IsFeast");
 		extra_data = (Map<String, Object>) map.get("extra_data");
 	}
 
@@ -314,7 +313,7 @@ import com.flightBooking.service.*;
 
 		Object IsFeastObj = map.get("IsFeast");
 		if(IsFeastObj != null)
-			IsFeast = new Boolean(IsFeastObj.toString());
+			IsFeast = IsFeastObj.toString();
 
 		extra_data = (Map<String, Object>) map.get("extra_data");
 	}
@@ -554,22 +553,20 @@ import com.flightBooking.service.*;
 		return Date != null;
 	}
 
-	public Boolean getIsFeast() {
+	public String getIsFeast() {
 		return IsFeast;
 	}
 
-	public void setIsFeast(Boolean IsFeast) {
+	public String getIsFeastEx() {
+		return IsFeast != null ? IsFeast : "";
+	}
+
+	public void setIsFeast(String IsFeast) {
 		this.IsFeast = IsFeast;
 	}
 
 	public void unSetIsFeast() {
 		this.IsFeast = null;
-	}
-
-	public boolean validateIsFeast(boolean add) throws ApplicationException {
-		if(add && IsFeast == null)
-			throw new ApplicationException(ExceptionSeverity.ERROR, "Requierd validation Failed[IsFeast]");
-		return IsFeast != null;
 	}
 
 	public Map<String, Object> getExtra_data() {
