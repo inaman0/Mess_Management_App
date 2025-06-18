@@ -38,7 +38,7 @@ const Sidebar = () => {
           <NavLink to="/menu" className="nav-link">
             Today's Menu
           </NavLink>
-          <NavLink to="/weeksmenu" className="nav-link">
+          <NavLink to="/weekmenu" className="nav-link">
             Week's Menu
           </NavLink>
           <NavLink to="/sickmeal" className="nav-link">

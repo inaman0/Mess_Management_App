@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiConfig from '../../config/apiConfig';
-import MealMenuCard from './MealMenuCard';
+import MealMenuCard from '../components/MealMenuCard';
 import { useNavigate } from 'react-router-dom';
 
 interface MenuItem {

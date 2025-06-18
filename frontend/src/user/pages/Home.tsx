@@ -1,5 +1,5 @@
-import Menu from '../components/Menu';
-import MenuOfTime from '../components/MenuOfTime';
+import Menu from './Menu';
+import MenuOfTime from './MenuOfTime';
 
 const Home = () => {
   

@@ -22,6 +22,9 @@ import WeeklyRatings from "./admin/pages/WeeklyRatings";
 import Page404 from "./admin/pages/Page404";
 import Feedback from "./admin/pages/Feedback";
 import AdminLayout from "./admin/layouts/AdminLayout";
+import UserFeedback from "./user/pages/UserFeedback";
+import Menu from "./user/pages/Menu";
+import WeekMenu from "./user/pages/WeekMenu";
 
 function App() {
   return (
@@ -32,12 +35,17 @@ function App() {
       <Route path='/page5' element={<Page5 />}/>
       <Route path='/page6' element={<Page6 />}/>
       <Route path='/page7' element={<Page7 />}/>
-      <Route path='/page8' element={<Page8 />}/>      <Route path='/edit' element={<Edit/>}/>
+      <Route path='/page8' element={<Page8 />}/>      
+      <Route path='/edit' element={<Edit/>}/>
       <Route path='/signup' element={<Signup />}/>
       <Route path='/login' element={<Login />}/>
+
+      {/* User routes */}
       <Route path='/' element={<Mainlayout/>}>
-      <Route index element={<Home />} />
-        <Route path='feedback' element={<Feedback />} />
+        <Route index element={<Home />} />
+        <Route path='menu' element={<Menu />} />
+        <Route path='weekmenu' element={<WeekMenu />} />
+        <Route path='feedback' element={<UserFeedback />} />
         <Route path='sickmeal' element={<Sickmeal />} />
       </Route>
       
