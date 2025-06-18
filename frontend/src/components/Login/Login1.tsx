@@ -8,7 +8,7 @@ export default function Login1(props: any) {
         style={{
           width: 350,
           borderRadius: 16,
-          overflow: "hidden",
+          overflow: "hidden", 
         }}
         onSubmit={props.handleSubmit}
       >
