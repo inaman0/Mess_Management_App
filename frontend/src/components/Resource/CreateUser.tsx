@@ -290,6 +290,7 @@ const CreateUser = () => {
       )}
     </div>
   );
+  
 };
 
 export default CreateUser;
