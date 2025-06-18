@@ -1,20 +1,19 @@
+// MainLayout.js
 import React from 'react';
 import Sidebar from '../components/Sidebar';
-import Navbar from '../components/Navbar';
+import Background from '../components/Background';
 import { Outlet } from 'react-router-dom';
+import './Mainlayout.css';
 
 const MainLayout = () => {
   return (
-    <div className="d-flex">
-      {/* Sidebar */}
+    <div className="main-layout">
       <Sidebar />
-
-      {/* Main Content */}
-      <div className="flex-grow-1">
-        <Navbar />
-        <main className="p-4">
+      <div className="main-content">
+        <Background />
+        <div className="content-container px-4">
           <Outlet />
-        </main>
+        </div>
       </div>
     </div>
   );

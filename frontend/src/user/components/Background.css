@@ -1,0 +1,15 @@
+/* Background.css */
+.background-container {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    margin-top: -100px;
+    z-index: 0;
+  }
+  
+  .user-background {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }

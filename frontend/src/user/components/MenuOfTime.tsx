@@ -13,7 +13,7 @@ interface MenuItem {
 interface MealData {
   id: string;
   Meal_type: string;
-  Date: Date; // Changed from Menu_id to Date
+  Date: Date;
 }
 
 const MEAL_TIME_RANGES = {
