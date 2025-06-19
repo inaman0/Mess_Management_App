@@ -1,5 +1,3 @@
-
-
 import * as XLSX from 'xlsx';
 
 export interface Dish {
@@ -110,54 +108,140 @@ export const handleFileUpload = (file: File): Promise<MealPlan[]> => {
     reader.readAsArrayBuffer(file);
   });
 };
+
+
 export const submitMealPlansToMongo = async (
   mealPlans: MealPlan[],
   uploadUrlMeal: string,
+  uploadUrlMenuItem: string,
+  readMealUrl: string,
   session_id: string
 ): Promise<'success' | 'partial' | 'error'> => {
   if (!mealPlans || mealPlans.length === 0) return 'error';
 
-  const mealTypes = ['breakfast', 'lunch', 'snacks', 'dinner'];
+  const mealTypes = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
   let totalMeals = 0;
   let successfulMeals = 0;
 
-  try {
-    for (const row of mealPlans) {
-      const dateStr = row.Date.toISOString().split('T')[0];
+  for (const row of mealPlans) {
+    const dateStr = row.Date.toISOString().split('T')[0];
 
-      for (const mealType of mealTypes) {
-        totalMeals++;
+    for (const mealType of mealTypes) {
+      totalMeals++;
 
-        const payload = {
-          Date: dateStr,
-          Meal_type: mealType.charAt(0).toUpperCase() + mealType.slice(1), // Capitalize for consistency
-          IsFeast: ""
+      // 1. POST Meal
+      const mealPayload = {
+        Date: dateStr,
+        Meal_type: mealType,
+        IsFeast: ""
+      };
+
+      const formData = new URLSearchParams();
+      formData.append('resource', base64EncodeUnicode(JSON.stringify(mealPayload)));
+      formData.append('resource_name', 'Meal');
+      formData.append('action', 'add');
+      formData.append('session_id', session_id);
+
+      const mealResponse = await fetch(uploadUrlMeal, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString()
+      });
+
+      if (!mealResponse.ok) {
+        console.error(`Failed to POST meal for ${mealType} on ${dateStr}`);
+        continue;
+      }
+
+      // 2. GET meals to fetch _id (using ReadMeal API with query params)
+      const readForm = new URLSearchParams();
+      readForm.append('queryId', 'GET_ALL');
+      // readForm.append('resource', 'Meal');
+      readForm.append('session_id', session_id);
+
+      const readResponse = await fetch(readMealUrl+readForm.toString(), {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        
+      });
+      
+
+      if (!readResponse.ok) {
+        console.error('Failed to read meals');
+        continue;
+      }
+
+     
+
+      // 3. Find the meal ID by date and type
+      // const foundMeal = meals.find(
+      //   (meal: any) => meal.Date === dateStr && meal.Meal_type === mealType
+      // );
+
+      // if (!foundMeal) {
+      //   console.error(`Meal not found for ${mealType} on ${dateStr}`);
+      //   continue;
+      // }
+
+      // const mealId = foundMeal._id || foundMeal.resource_id;
+      // if (!mealId) {
+      //   console.error('Meal ID missing');
+      //   continue;
+      // }
+
+      const readData = await readResponse.json();
+      const meals = readData.resource;
+
+if (!Array.isArray(meals)) {
+  console.error('Meals data is not an array');
+  continue;
+}
+
+const filteredMeals = meals.filter((meal: any) => {
+  const mealDate = new Date(meal.Date).toISOString().slice(0, 10);
+  return mealDate === dateStr && meal.Meal_type === mealType;
+});
+
+if (filteredMeals.length === 0) {
+  console.error(`Meal not found for ${mealType} on ${dateStr}`);
+  continue;
+}
+
+const mealId = filteredMeals[0]._id || filteredMeals[0].id || filteredMeals[0].resource_id;
+
+      // 4. POST each dish in that meal
+      const dishes = row[mealType.toLowerCase() as keyof MealPlan] as Dish[];
+      console.log(dishes);
+
+      for (const dish of dishes) {
+        const menuItemPayload = {
+          Dish_name: dish.dishName,
+          type: dish.dishType,
+          Meal_id: mealId
         };
 
-        const formData = new URLSearchParams();
-        formData.append('resource', base64EncodeUnicode(JSON.stringify(payload)));
-        formData.append('resource_name', 'Meal');
-        formData.append('action', 'add');
-        formData.append('session_id', session_id);
+        const dishFormData = new URLSearchParams();
+        dishFormData.append('resource', base64EncodeUnicode(JSON.stringify(menuItemPayload)));
+        dishFormData.append('resource_name', 'Menu_item');
+        dishFormData.append('action', 'add');
+        dishFormData.append('session_id', session_id);
 
-        const response = await fetch(uploadUrlMeal, {
+        const dishResponse = await fetch(uploadUrlMenuItem, {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formData.toString()
+          body: dishFormData.toString()
         });
 
-        if (response.ok) {
+        if (dishResponse.ok) {
           successfulMeals++;
         } else {
-          console.error(`Failed to upload ${payload.Meal_type} for ${dateStr}`, await response.text());
+          console.error(`Failed to add dish ${dish.dishName}`, await dishResponse.text());
         }
       }
     }
-
-    return successfulMeals === totalMeals ? 'success' : 'partial';
-  } catch (error) {
-    console.error('Upload error:', error);
-    return 'error';
   }
-};
 
+  if (successfulMeals === totalMeals) return 'success';
+  if (successfulMeals > 0) return 'partial';
+  return 'error';
+};

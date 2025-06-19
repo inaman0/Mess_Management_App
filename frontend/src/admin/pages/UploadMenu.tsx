@@ -5,6 +5,8 @@ const UploadMenu = () => {
     <MenuUploader
   acceptedFileType=".xlsx"
   uploadUrlMeal="http://localhost:8083/api/meal"
+  uploadUrlMenuItem="http://localhost:8083/api/menu_item"
+  readMealUrl="http://localhost:8083/api/meal?"
 />
 
 

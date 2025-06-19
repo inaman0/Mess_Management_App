@@ -7,9 +7,11 @@ import { handleFileUpload, MealPlan, submitMealPlansToMongo } from '../utils/exc
 interface MealUploaderProps {
   uploadUrlMeal: string;
   acceptedFileType: string;
+  uploadUrlMenuItem: string;
+   readMealUrl: string;
 }
 
-export default function FileUploader({ uploadUrlMeal }: MealUploaderProps) {
+export default function FileUploader({ uploadUrlMeal,uploadUrlMenuItem,readMealUrl }: MealUploaderProps) {
   const [excelData, setExcelData] = useState<MealPlan[] | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState('');
@@ -56,7 +58,7 @@ export default function FileUploader({ uploadUrlMeal }: MealUploaderProps) {
       return;
     }
 
-    const result = await submitMealPlansToMongo(excelData, uploadUrlMeal, session_id);
+    const result = await submitMealPlansToMongo(excelData, uploadUrlMeal, uploadUrlMenuItem, readMealUrl, session_id);
     setUploadStatus(result);
     setIsUploading(false);
     if (result === 'success') {
@@ -98,12 +100,12 @@ export default function FileUploader({ uploadUrlMeal }: MealUploaderProps) {
           {isUploading ? 'Uploading...' : 'Upload'}
         </button>
       </form>
-      {/* {excelData && (
+      {excelData && (
         <div style={{ marginTop: '20px' }}>
           <h4>Parsed Excel Data (JSON):</h4>
           <pre>{JSON.stringify(excelData, null, 2)}</pre>
         </div>
-      )} */}
+      )}
     </div>
   );
 }
