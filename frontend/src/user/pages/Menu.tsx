@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiConfig from '../../config/apiConfig';
-import MealMenuCard from '../components/MealMenuCard';
+import ReviewMenuCard from '../components/ReviewMenuCard';
 
 interface MenuItem {
   Dish_name: string;
@@ -12,7 +12,7 @@ interface MenuItem {
 interface MealData {
   id: string;      
   Meal_type: string;
-  Date: Date; // Changed to Date (capital D)
+  Date: Date;
 }
 
 const Menu = () => {
@@ -23,7 +23,7 @@ const Menu = () => {
 
   const apiUrl = `${apiConfig.getResourceUrl('menu_item')}?`;
   const apiMealUrl = `${apiConfig.getResourceUrl('meal')}?`;
-
+  
   useEffect(() => {
     const fetchAllResources = async () => {
       setIsLoading(true);
@@ -37,7 +37,7 @@ const Menu = () => {
 
         const [menuResponse, mealResponse] = await Promise.all([
           fetch(apiUrl + params.toString()),
-          fetch(apiMealUrl + params.toString())
+          fetch(apiMealUrl + params.toString()),
         ]);
 
         if (!menuResponse.ok || !mealResponse.ok) {
@@ -47,10 +47,12 @@ const Menu = () => {
         const menuData = await menuResponse.json();
         const mealData = await mealResponse.json();
 
-        // Parse dates from API response - using Date (capital D)
+        // console.log(mealData.resource);
+
+        // Parse dates from API response - using Date
         const parsedMeals = mealData.resource?.map((meal: any) => ({
           ...meal,
-          Date: new Date(meal.Date) // Changed to Date (capital D)
+          Date: new Date(meal.Date)
         })) || [];
 
         setMenuItems(menuData.resource || []);
@@ -76,7 +78,7 @@ const Menu = () => {
     );
   };
 
-  // Filter meals to only include those for today - using Date (capital D)
+  // Filter meals to only include those for today - using Date
   const today = new Date();
   const todaysMeals = meals.filter(meal => meal.Date && isSameDate(meal.Date, today));
 
@@ -132,11 +134,12 @@ const Menu = () => {
             <h2 className="text-2xl font-bold mb-4 border-b pb-2">{mealType}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {items.map(item => (
-                <MealMenuCard
+                <ReviewMenuCard
                   key={item.id}
                   Dish_name={item.Dish_name}
                   type={item.type}
                   id={item.id}
+                  mealType={mealType}
                 />
               ))}
             </div>

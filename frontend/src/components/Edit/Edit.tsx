@@ -156,7 +156,10 @@ const Edit = () => {
       ...editedRecord[id],
     };
 
-    const base64Encoded = btoa(JSON.stringify(updatedRecord));
+    // const base64Encoded = btoa(JSON.stringify(updatedRecord));
+    const jsonString = JSON.stringify(updatedRecord);
+    const uint8Array = new TextEncoder().encode(jsonString);
+    const base64Encoded = btoa(String.fromCharCode(...uint8Array));
     const params = new URLSearchParams();
     const ssid: any = sessionStorage.getItem("key");
     params.append("resource", base64Encoded);
