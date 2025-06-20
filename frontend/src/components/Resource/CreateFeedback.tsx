@@ -20,6 +20,13 @@ const CreateFeedback = () => {
   const metadataUrl = apiConfig.getResourceMetaDataUrl("Feedback");
   const navigate = useNavigate();
 
+  const HARDCODED_USER_ID = "b9cee83b-f548-471e-a700-31bcdaa5a4b5-38"; // Replace with your actual user ID
+
+  // Set hardcoded user ID when component mounts
+  useEffect(() => {
+    setDataToSave({ ...dataToSave, User: HARDCODED_USER_ID });
+  }, []);
+
   // Fetch metadata
   useEffect(() => {
     const fetchResMetaData = async () => {
@@ -36,7 +43,7 @@ const CreateFeedback = () => {
           const metaData = await data.json();
           setResMetaData(metaData);
           setFields(metaData[0].fieldValues);
-          const foreignFields = metaData[0].fieldValues.filter((field: any) => field.foreign);
+          const foreignFields = metaData[0].fieldValues.filter((field: any) => field.foreign && field.name !== 'User');
           
           for (const field of foreignFields) {
             if (!fetchedResources.has(field.foreign)) {
@@ -115,7 +122,10 @@ const CreateFeedback = () => {
 
   const handleCreate = async () => {
     const params = new URLSearchParams();
-    const jsonString = JSON.stringify(dataToSave);
+    const jsonString = JSON.stringify({
+      ...dataToSave,
+      User: HARDCODED_USER_ID
+    });
     const base64Encoded = btoa(jsonString);
     params.append('resource', base64Encoded);
     const ssid: any = sessionStorage.getItem('key');
@@ -138,7 +148,7 @@ const CreateFeedback = () => {
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-
+    // Your image upload logic here
   };
 
   const handleSearchChange = (fieldName: string, value: string) => {
@@ -161,55 +171,8 @@ const CreateFeedback = () => {
         </div>
         <div className="card-body">
           {fields.map((field, index) => {
-            if (field.name !== 'id' && !regex.test(field.name)) {
-              if (field.foreign) {
-                const options = foreignkeyData[field.foreign] || [];
-                const filteredOptions = options.filter((option) =>
-                  option[field.foreign_field]
-                    ?.toLowerCase()
-                    .includes((searchQueries[field.name] || '').toLowerCase())
-                );
-
-                return (
-                  <div key={index} className="mb-3">
-                    <label className="form-label">
-                      {field.required && <span className="text-danger">*</span>} {field.name}
-                    </label>
-                    <div className="dropdown">
-                      <button
-                        className="btn btn-outline-secondary dropdown-toggle w-100 text-start"
-                        type="button"
-                        id={`dropdown-${field.name}`}
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {dataToSave[field.name]
-                          ? options.find((item) => item[field.foreign_field] === dataToSave[field.name])?.[field.foreign_field] || 'Select'
-                          : `Select ${field.name}`}
-                      </button>
-                      <ul className="dropdown-menu w-100" aria-labelledby={`dropdown-${field.name}`}>
-                        {filteredOptions.length > 0 ? (
-                          filteredOptions.map((option, i) => (
-                            <li key={i}>
-                              <button
-                                className="dropdown-item"
-                                type="button"
-                                onClick={() =>
-                                  setDataToSave({ ...dataToSave, [field.name]: option[field.foreign_field] })
-                                }
-                              >
-                                {option[field.foreign_field]}
-                              </button>
-                            </li>
-                          ))
-                        ) : (
-                          <li className="dropdown-item text-muted">No options available</li>
-                        )}
-                      </ul>
-                    </div>
-                  </div>
-                );
-              } else if (field.name === 'Description') {
+            if (field.name !== 'id' && !regex.test(field.name) && field.name !== 'User') {
+              if (field.name === 'Description') {
                 return (
                   <div key={index} className="mb-3">
                     <label className="form-label">

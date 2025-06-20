@@ -14,18 +14,6 @@ export interface MealPlan {
   dinner: Dish[];
 }
 
-// export const excelDateToMongoDate = (serial: number): Date => {
-//   const utcDays = serial - 25569;
-//   const utcMilliseconds = utcDays * 86400 * 1000;
-//   const date = new Date(utcMilliseconds);
-//   if (date.getFullYear() < 2000) {
-//     const corrected = new Date(date);
-//     corrected.setFullYear(2000 + (date.getFullYear() % 100));
-//     return corrected;
-//   }
-//   return date;
-// };
-
 export const excelDateToMongoDate = (serial: number): Date => {
   // Excel dates are based on December 30, 1899 (Windows)
   const utcDays = Math.floor(serial - 25569); // 25569 = days between 1900-01-01 and 1970-01-01
@@ -159,7 +147,8 @@ export const submitMealPlansToMongo = async (
   for (const row of mealPlans) {
     // const dateStr = row.Date.toISOString().split('T')[0];
     
-    const istDate = new Date(row.Date.getTime() + (5.5 * 60 * 60 * 1000)); // Add IST offset
+    const istDate = new Date(row.Date.getTime() + (5.5 * 60 * 60 * 1000) + (24 * 60 * 60 * 1000)); // Add IST offset
+    // console.log(istDate);
     const dateStr = istDate.toISOString().split('T')[0];
     
     for (const mealType of mealTypes) {

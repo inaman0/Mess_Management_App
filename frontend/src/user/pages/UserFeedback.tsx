@@ -5,7 +5,7 @@ import ReadFeedback from '../../components/Resource/ReadFeedback'
 
 const UserFeedback = () => {
   return (
-    <div className='d-flex justify-content-center align-items-center vh-100'>
+    <div className='d-flex justify-content-center align-items-center vh-90'>
       <CreateFeedback />
       {/* <ReadFeedback /> */}
     </div>

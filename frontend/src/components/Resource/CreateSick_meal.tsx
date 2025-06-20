@@ -7,25 +7,73 @@ export type resourceMetaData = {
   fieldValues: any[];
 };
 
+interface Meal {
+  id: string;
+  Date: string;
+  Meal_type: string;
+}
+
 const CreateSick_meal = () => {
-  const [resMetaData, setResMetaData] = useState<resourceMetaData[]>([]);
   const [fields, setFields] = useState<any[]>([]);
   const [dataToSave, setDataToSave] = useState<any>({});
-  const [showToast, setShowToast] = useState<any>(false);
-  const [foreignkeyData, setForeignkeyData] = useState<Record<string, any[]>>({});
-  const [searchQueries, setSearchQueries] = useState<Record<string, string>>({});
-  const [enums, setEnums] = useState<Record<string, any[]>>({});
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [mealData, setMealData] = useState<Meal[]>([]);
+  const [mealTypes, setMealTypes] = useState<string[]>(['Breakfast', 'Lunch', 'Snacks', 'Dinner']);
+  const [mealSelection, setMealSelection] = useState({
+    Date: '',
+    Meal_type: ''
+  });
   const regex = /^(g_|archived|extra_data)/;
   const apiUrl = apiConfig.getResourceUrl("sick_meal");
+  const apimealUrl = apiConfig.getResourceUrl("meal");
   const metadataUrl = apiConfig.getResourceMetaDataUrl("SickMeal");
   const navigate = useNavigate();
+
+  const HARDCODED_USER_ID = "b9cee83b-f548-471e-a700-31bcdaa5a4b5-38";
+
+  // Set hardcoded user ID when component mounts
+  useEffect(() => {
+    setDataToSave({ User_id: HARDCODED_USER_ID });
+  }, []);
+
+  // Fetch all meals data
+  useEffect(() => {
+    const fetchMealData = async () => {
+      try {
+        const params = new URLSearchParams();
+        const ssid: any = sessionStorage.getItem('key');
+        params.append('queryId', 'GET_ALL');
+        params.append('session_id', ssid);
+
+        const response = await fetch(
+          `${apimealUrl}?${params.toString()}`,
+          {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json() as { resource: Meal[] };
+          setMealData(data.resource);
+          
+          // Extract unique meal types
+          if (data.resource?.length > 0) {
+            const types = [...new Set(data.resource.map(meal => meal.Meal_type))];
+            setMealTypes(types);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching meal data:', error);
+      }
+    };
+
+    fetchMealData();
+  }, []);
 
   // Fetch metadata
   useEffect(() => {
     const fetchResMetaData = async () => {
-      const fetchedResources = new Set();
-      const fetchedEnum = new Set();
-      
       try {
         const data = await fetch(metadataUrl, {
           method: 'GET',
@@ -34,107 +82,71 @@ const CreateSick_meal = () => {
 
         if (data.ok) {
           const metaData = await data.json();
-          setResMetaData(metaData);
           setFields(metaData[0].fieldValues);
-          const foreignFields = metaData[0].fieldValues.filter((field: any) => field.foreign);
-          
-          for (const field of foreignFields) {
-            if (!fetchedResources.has(field.foreign)) {
-              fetchedResources.add(field.foreign);
-              await fetchForeignData(field.foreign, field.name, field.foreign_field);
-            }
-          }
-
-          const enumFields = metaData[0].fieldValues.filter((field: any) => field.isEnum === true);
-          for (const field of enumFields) {
-            if (!fetchedEnum.has(field.possible_value)) {
-              fetchedEnum.add(field.possible_value);
-              await fetchEnumData(field.possible_value);
-            }
-          }
-        } else {
-          console.error('Failed to fetch components:', data.statusText);
         }
       } catch (error) {
-        console.error('Error fetching components:', error);
+        console.error('Error fetching metadata:', error);
       }
     };
 
     fetchResMetaData();
   }, []);
 
-  const fetchEnumData = async (enumName: string) => {
-    try {
-      const response = await fetch(`${apiConfig.API_BASE_URL}/${enumName}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setEnums((prev) => ({
-          ...prev,
-          [enumName]: data
-        }));
-      } else {
-        console.error(`Error fetching enum data for ${enumName}:`, response.status);
-      }
-    } catch (error) {
-      console.error(`Error fetching enum data for ${enumName}:`, error);
+  const findMatchingMealId = (): string | null => {
+    if (!mealSelection.Date || !mealSelection.Meal_type || mealData.length === 0) {
+      return null;
     }
-  };
-
-  const fetchForeignData = async (foreignResource: string, fieldName: string, foreignField: string) => {
-    try {
-      const params = new URLSearchParams();
-      const ssid: any = sessionStorage.getItem('key');
-      params.append('queryId', 'GET_ALL');
-      params.append('session_id', ssid);
-
-      const response = await fetch(
-        `${apiConfig.API_BASE_URL}/${foreignResource.toLowerCase()}?${params.toString()}`,
-        {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setForeignkeyData((prev) => ({
-          ...prev,
-          [foreignResource]: data.resource
-        }));
-      } else {
-        console.error(`Error fetching foreign data for ${fieldName}:`, response.status);
-      }
-    } catch (error) {
-      console.error(`Error fetching foreign data for ${fieldName}:`, error);
-    }
+    
+    const selectedDate = new Date(mealSelection.Date).toISOString().split('T')[0];
+    
+    const matchingMeal = mealData.find(meal => {
+      const mealDate = new Date(meal.Date).toISOString().split('T')[0];
+      return mealDate === selectedDate && meal.Meal_type === mealSelection.Meal_type;
+    });
+    
+    return matchingMeal?.id || null;
   };
 
   const handleCreate = async () => {
-    const params = new URLSearchParams();
-    const jsonString = JSON.stringify(dataToSave);
-    const base64Encoded = btoa(jsonString);
-    params.append('resource', base64Encoded);
-    const ssid: any = sessionStorage.getItem('key');
-    params.append('session_id', ssid);
+    const mealId = findMatchingMealId();
     
-    const response = await fetch(apiUrl + `?${params.toString()}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
+    if (!mealId) {
+      alert('No meal available for the selected date and meal type');
+      return;
+    }
 
-    if (response.ok) {
-      setShowToast(true);
-      setTimeout(() => {
-        setShowToast(false);
-        navigate('/');
-      }, 3000);
-      setDataToSave({});
+    try {
+      const params = new URLSearchParams();
+      const submissionData = {
+        ...dataToSave,
+        Meal_id: mealId
+      };
+      
+      const jsonString = JSON.stringify(submissionData);
+      const base64Encoded = btoa(jsonString);
+      params.append('resource', base64Encoded);
+      const ssid: any = sessionStorage.getItem('key');
+      params.append('session_id', ssid);
+      
+      const response = await fetch(apiUrl + `?${params.toString()}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      if (response.ok) {
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+          navigate('/');
+        }, 3000);
+        setDataToSave({ User_id: HARDCODED_USER_ID });
+        setMealSelection({ Date: '', Meal_type: '' });
+      }
+    } catch (error) {
+      console.error('Error submitting meal request:', error);
+      alert('Error submitting meal request');
     }
   };
 
@@ -145,105 +157,46 @@ const CreateSick_meal = () => {
           <h4 className="mb-0">Request Sick Meal</h4>
         </div>
         <div className="card-body">
+          {/* Date Input */}
+          <div className="mb-3">
+            <label className="form-label">
+              <span className="text-danger">*</span> Date
+            </label>
+            <input
+              type="date"
+              className="form-control"
+              required
+              value={mealSelection.Date}
+              onChange={(e) => setMealSelection({...mealSelection, Date: e.target.value})}
+              min={new Date().toISOString().split('T')[0]}
+            />
+          </div>
+
+          {/* Meal Type Select */}
+          <div className="mb-3">
+            <label className="form-label">
+              <span className="text-danger">*</span> Meal Type
+            </label>
+            <select
+              className="form-select"
+              required
+              value={mealSelection.Meal_type}
+              onChange={(e) => setMealSelection({...mealSelection, Meal_type: e.target.value})}
+            >
+              <option value="">Select Meal Type</option>
+              {mealTypes.map((type, index) => (
+                <option key={index} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Other fields */}
           {fields.map((field, index) => {
-            if (field.name !== 'id' && !regex.test(field.name)) {
-              if (field.foreign && field.name === 'User_id') {
-                const options = foreignkeyData[field.foreign] || [];
-                const filteredOptions = options.filter((option) =>
-                  option[field.foreign_field]
-                    ?.toLowerCase()
-                    .includes((searchQueries[field.name] || '').toLowerCase())
-                );
-
-                return (
-                  <div key={index} className="mb-3">
-                    <label className="form-label">
-                      {field.required && <span className="text-danger">*</span>} {field.name.replace('_', ' ')}
-                    </label>
-                    <div className="dropdown">
-                      <button
-                        className="btn btn-outline-secondary dropdown-toggle w-100 text-start"
-                        type="button"
-                        id={`dropdown-${field.name}`}
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {dataToSave[field.name]
-                          ? options.find((item) => item[field.foreign_field] === dataToSave[field.name])?.[field.foreign_field] || 'Select'
-                          : `Select ${field.name.replace('_', ' ')}`}
-                      </button>
-                      <ul className="dropdown-menu w-100" aria-labelledby={`dropdown-${field.name}`}>
-                        {filteredOptions.length > 0 ? (
-                          filteredOptions.map((option, i) => (
-                            <li key={i}>
-                              <button
-                                className="dropdown-item"
-                                type="button"
-                                onClick={() =>
-                                  setDataToSave({ ...dataToSave, [field.name]: option[field.foreign_field] })
-                                }
-                              >
-                                {option[field.foreign_field]}
-                              </button>
-                            </li>
-                          ))
-                        ) : (
-                          <li className="dropdown-item text-muted">No options available</li>
-                        )}
-                      </ul>
-                    </div>
-                  </div>
-                );
-              } 
-              else if (field.foreign && field.name === 'Meal_id') {
-                const options = foreignkeyData[field.foreign] || [];
-                const filteredOptions = options.filter((option) =>
-                  option[field.foreign_field]
-                    ?.toLowerCase()
-                    .includes((searchQueries[field.name] || '').toLowerCase())
-                );
-
-                return (
-                  <div key={index} className="mb-3">
-                    <label className="form-label">
-                      {field.required && <span className="text-danger">*</span>} {field.name.replace('_', ' ')}
-                    </label>
-                    <div className="dropdown">
-                      <button
-                        className="btn btn-outline-secondary dropdown-toggle w-100 text-start"
-                        type="button"
-                        id={`dropdown-${field.name}`}
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {dataToSave[field.name]
-                          ? options.find((item) => item[field.foreign_field] === dataToSave[field.name])?.[field.foreign_field] || 'Select'
-                          : `Select ${field.name.replace('_', ' ')}`}
-                      </button>
-                      <ul className="dropdown-menu w-100" aria-labelledby={`dropdown-${field.name}`}>
-                        {filteredOptions.length > 0 ? (
-                          filteredOptions.map((option, i) => (
-                            <li key={i}>
-                              <button
-                                className="dropdown-item"
-                                type="button"
-                                onClick={() =>
-                                  setDataToSave({ ...dataToSave, [field.name]: option[field.foreign_field] })
-                                }
-                              >
-                                {option[field.foreign_field]}
-                              </button>
-                            </li>
-                          ))
-                        ) : (
-                          <li className="dropdown-item text-muted">No options available</li>
-                        )}
-                      </ul>
-                    </div>
-                  </div>
-                );
-              }
-              else if (field.name === 'Instruction') {
+            if (field.name !== 'id' && !regex.test(field.name) && 
+                field.name !== 'User_id' && field.name !== 'Meal_id') {
+              if (field.name === 'Instruction') {
                 return (
                   <div key={index} className="mb-3">
                     <label className="form-label">
@@ -255,7 +208,7 @@ const CreateSick_meal = () => {
                       required={field.required}
                       placeholder={`Enter ${field.name}`}
                       value={dataToSave[field.name] || ''}
-                      onChange={(e) => setDataToSave({ ...dataToSave, [e.target.name]: e.target.value })}
+                      onChange={(e) => setDataToSave({...dataToSave, [e.target.name]: e.target.value})}
                       rows={3}
                     />
                   </div>
@@ -264,6 +217,7 @@ const CreateSick_meal = () => {
             }
             return null;
           })}
+
           <button className="btn btn-success w-100 mt-3" onClick={handleCreate}>
             Request Meal
           </button>
@@ -272,10 +226,7 @@ const CreateSick_meal = () => {
       
       {/* Toast Notification */}
       {showToast && (
-        <div
-          className="toast-container position-fixed top-50 start-50 translate-middle p-3"
-          style={{ zIndex: 2000 }}
-        >
+        <div className="toast-container position-fixed top-50 start-50 translate-middle p-3" style={{ zIndex: 2000 }}>
           <div className="toast show bg-light border-success" role="alert">
             <div className="toast-header">
               <strong className="me-auto text-success">Success</strong>

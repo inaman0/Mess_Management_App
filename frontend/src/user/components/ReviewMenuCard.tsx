@@ -35,6 +35,8 @@ const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, meal
     Dinner: 20       // 8 PM
   };
 
+  const HARDCODED_USER_ID = "b9cee83b-f548-471e-a700-31bcdaa5a4b5-38";
+
   useEffect(() => {
     // Check if current time is after the rating start time
     const checkRatingAvailability = () => {
@@ -67,9 +69,8 @@ const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, meal
         setReviews(reviewData.resource || []);
         
         // Check if current user has already reviewed this item
-        const userId = "b9cee83b-f548-471e-a700-31bcdaa5a4b5-38";
         const userReviewed = reviewData.resource.some(
-          (review: Review) => review.Menu_item_id === id && review.User_id === userId
+          (review: Review) => review.Menu_item_id === id && review.User_id === HARDCODED_USER_ID
         );
         setHasReviewed(userReviewed);
         
@@ -112,10 +113,10 @@ const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, meal
     try {
       const params = new URLSearchParams();
       const ssid = sessionStorage.getItem('key') || '';
-      const userId = "b9cee83b-f548-471e-a700-31bcdaa5a4b5-38";
+      
       
       const reviewData = {
-        User_id: userId,
+        User_id: HARDCODED_USER_ID,
         Menu_item_id: id,
         Ratings: newRating,
       };
