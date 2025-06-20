@@ -54,6 +54,7 @@ const WeekMenu = () => {
           })) || [];
   
           setMenuItems(menuData.resource || []);
+          console.log('Menu Items:', menuData.resource);
           setMeals(parsedMeals);
           
         } catch (error) {
@@ -103,6 +104,8 @@ const WeekMenu = () => {
     const currentDayMenuItems = menuItems.filter(item => 
       currentDayMeals.some(meal => meal.id === item.Meal_id)
     );
+
+    console.log('Current Day Menu Items:', currentDayMenuItems);  
   
     // Group menu items by meal type
     const groupedMenu = currentDayMenuItems.reduce<Record<string, MenuItem[]>>((acc, item) => {

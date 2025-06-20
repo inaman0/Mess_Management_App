@@ -14,17 +14,49 @@ export interface MealPlan {
   dinner: Dish[];
 }
 
+// export const excelDateToMongoDate = (serial: number): Date => {
+//   const utcDays = serial - 25569;
+//   const utcMilliseconds = utcDays * 86400 * 1000;
+//   const date = new Date(utcMilliseconds);
+//   if (date.getFullYear() < 2000) {
+//     const corrected = new Date(date);
+//     corrected.setFullYear(2000 + (date.getFullYear() % 100));
+//     return corrected;
+//   }
+//   return date;
+// };
+
 export const excelDateToMongoDate = (serial: number): Date => {
-  const utcDays = serial - 25569;
+  // Excel dates are based on December 30, 1899 (Windows)
+  const utcDays = Math.floor(serial - 25569); // 25569 = days between 1900-01-01 and 1970-01-01
   const utcMilliseconds = utcDays * 86400 * 1000;
+  
+  // Create date in UTC
   const date = new Date(utcMilliseconds);
-  if (date.getFullYear() < 2000) {
-    const corrected = new Date(date);
-    corrected.setFullYear(2000 + (date.getFullYear() % 100));
-    return corrected;
+  
+  // Adjust for Excel's leap year bug (1900 was not a leap year)
+  if (serial >= 60) {
+    date.setUTCDate(date.getUTCDate() - 1);
   }
-  return date;
+  
+  // Handle year 2000 issue if needed
+  if (date.getUTCFullYear() < 2000) {
+    date.setUTCFullYear(2000 + (date.getUTCFullYear() % 100));
+  }
+  
+  // Convert to IST (UTC+5:30)
+  const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+  const istTime = date.getTime() + istOffset;
+  
+  // Return a new Date at midnight in IST
+  const istDate = new Date(istTime);
+  return new Date(
+    istDate.getUTCFullYear(),
+    istDate.getUTCMonth(),
+    istDate.getUTCDate()
+  );
 };
+
 const base64EncodeUnicode = (str: string): string => {
   return btoa(unescape(encodeURIComponent(str)));
 };
@@ -120,16 +152,17 @@ export const submitMealPlansToMongo = async (
   if (!mealPlans || mealPlans.length === 0) return 'error';
 
   const mealTypes = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
-  let totalMeals = 0;
-  let successfulMeals = 0;
+  let totalDishes = 0;
+  let successfulDishes = 0;
 
+  // Step 1: Add all Meals
   for (const row of mealPlans) {
-    const dateStr = row.Date.toISOString().split('T')[0];
-
+    // const dateStr = row.Date.toISOString().split('T')[0];
+    
+    const istDate = new Date(row.Date.getTime() + (5.5 * 60 * 60 * 1000)); // Add IST offset
+    const dateStr = istDate.toISOString().split('T')[0];
+    
     for (const mealType of mealTypes) {
-      totalMeals++;
-
-      // 1. POST Meal
       const mealPayload = {
         Date: dateStr,
         Meal_type: mealType,
@@ -150,70 +183,66 @@ export const submitMealPlansToMongo = async (
 
       if (!mealResponse.ok) {
         console.error(`Failed to POST meal for ${mealType} on ${dateStr}`);
+      }
+    }
+  }
+
+  // Step 2: Fetch all meals once to build mealIdMap
+  const mealIdMap = new Map<string, string>();
+  const readForm = new URLSearchParams();
+  readForm.append('queryId', 'GET_ALL');
+  readForm.append('session_id', session_id);
+
+  const readResponse = await fetch(readMealUrl + readForm.toString(), {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  });
+
+  if (!readResponse.ok) {
+    console.error('Failed to fetch all meals after insert');
+    return 'error';
+  }
+
+  const readData = await readResponse.json();
+  const meals = readData.resource;
+
+  for (const meal of meals) {
+    const mealDate = new Date(meal.Date).toISOString().split('T')[0];
+    const mealType = meal.Meal_type;
+    const mealId = meal._id || meal.id || meal.resource_id;
+
+    if (mealDate && mealType && mealId) {
+      const key = `${mealDate}|${mealType}`;
+      mealIdMap.set(key, mealId);
+    }
+  }
+
+  // Step 3: Add all Dishes (Menu_item)
+  for (const row of mealPlans) {
+    // const dateStr = row.Date.toISOString().split('T')[0];
+
+    const istDate = new Date(row.Date.getTime() + (5.5 * 60 * 60 * 1000)); // Add IST offset
+    const dateStr = istDate.toISOString().split('T')[0];
+
+    for (const mealType of mealTypes) {
+      const key = `${dateStr}|${mealType}`;
+      const mealId = mealIdMap.get(key);
+
+      if (!mealId) {
+        console.error(`Missing meal ID for ${mealType} on ${dateStr}, skipping dish addition`);
         continue;
       }
 
-      // 2. GET meals to fetch _id (using ReadMeal API with query params)
-      const readForm = new URLSearchParams();
-      readForm.append('queryId', 'GET_ALL');
-      // readForm.append('resource', 'Meal');
-      readForm.append('session_id', session_id);
-
-      const readResponse = await fetch(readMealUrl+readForm.toString(), {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        
-      });
-      
-
-      if (!readResponse.ok) {
-        console.error('Failed to read meals');
-        continue;
-      }
-
-     
-
-      // 3. Find the meal ID by date and type
-      // const foundMeal = meals.find(
-      //   (meal: any) => meal.Date === dateStr && meal.Meal_type === mealType
-      // );
-
-      // if (!foundMeal) {
-      //   console.error(`Meal not found for ${mealType} on ${dateStr}`);
-      //   continue;
-      // }
-
-      // const mealId = foundMeal._id || foundMeal.resource_id;
-      // if (!mealId) {
-      //   console.error('Meal ID missing');
-      //   continue;
-      // }
-
-      const readData = await readResponse.json();
-      const meals = readData.resource;
-
-if (!Array.isArray(meals)) {
-  console.error('Meals data is not an array');
-  continue;
-}
-
-const filteredMeals = meals.filter((meal: any) => {
-  const mealDate = new Date(meal.Date).toISOString().slice(0, 10);
-  return mealDate === dateStr && meal.Meal_type === mealType;
-});
-
-if (filteredMeals.length === 0) {
-  console.error(`Meal not found for ${mealType} on ${dateStr}`);
-  continue;
-}
-
-const mealId = filteredMeals[0]._id || filteredMeals[0].id || filteredMeals[0].resource_id;
-
-      // 4. POST each dish in that meal
       const dishes = row[mealType.toLowerCase() as keyof MealPlan] as Dish[];
-      console.log(dishes);
+
+      if (!dishes || !Array.isArray(dishes)) {
+        console.warn(`No dishes found for ${mealType} on ${dateStr}`);
+        continue;
+      }
 
       for (const dish of dishes) {
+        totalDishes++;
+
         const menuItemPayload = {
           Dish_name: dish.dishName,
           type: dish.dishType,
@@ -233,15 +262,17 @@ const mealId = filteredMeals[0]._id || filteredMeals[0].id || filteredMeals[0].r
         });
 
         if (dishResponse.ok) {
-          successfulMeals++;
+          successfulDishes++;
         } else {
-          console.error(`Failed to add dish ${dish.dishName}`, await dishResponse.text());
+          const errorText = await dishResponse.text();
+          console.error(`Failed to POST dish "${dish.dishName}" for ${mealType} on ${dateStr}:`, errorText);
         }
       }
     }
   }
 
-  if (successfulMeals === totalMeals) return 'success';
-  if (successfulMeals > 0) return 'partial';
+  // Step 4: Final status return
+  if (successfulDishes === totalDishes && totalDishes > 0) return 'success';
+  if (successfulDishes > 0) return 'partial';
   return 'error';
 };
