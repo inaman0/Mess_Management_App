@@ -14,6 +14,7 @@ interface MealData {
   id: string;
   Meal_type: string;
   Date: Date;
+  IsFeast: string;
 }
 
 const MEAL_TIME_RANGES = {
@@ -42,6 +43,7 @@ const MenuOfTime = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentMealType, setCurrentMealType] = useState('');
+  const [isCurrentMealFeast, setIsCurrentMealFeast] = useState(false);
 
   const apiUrl = `${apiConfig.getResourceUrl('menu_item')}?`;
   const apiMealUrl = `${apiConfig.getResourceUrl('meal')}?`;
@@ -56,7 +58,6 @@ const MenuOfTime = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Simple date comparison function
   const isSameDate = (date1: Date, date2: Date) => {
     return (
       date1.getFullYear() === date2.getFullYear() &&
@@ -88,7 +89,6 @@ const MenuOfTime = () => {
         const menuData = await menuResponse.json();
         const mealData = await mealResponse.json();
 
-        // Parse dates from API response
         const parsedMeals = mealData.resource?.map((meal: any) => ({
           ...meal,
           Date: new Date(meal.Date)
@@ -119,12 +119,18 @@ const MenuOfTime = () => {
     );
   });
 
+  // Check if current meal is a feast
+  useEffect(() => {
+    const currentMeal = todaysMeals.find(meal => meal.Meal_type === currentMealType);
+    setIsCurrentMealFeast(currentMeal?.IsFeast === "true");
+  }, [currentMealType, todaysMeals]);
+
   if (isLoading) return <div className="p-4 text-center">Loading menu...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
   if (menuItems.length === 0) return <div className="p-4 text-center">No menu items available</div>;
 
   return (
-    <div className="p-4">
+    <div className={`p-4 ${isCurrentMealFeast ? 'bg-yellow-50' : ''}`}>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1 className="h1 m-0">
           Today's {currentMealType} Menu ({today.toLocaleDateString('en-US', { 
@@ -132,6 +138,7 @@ const MenuOfTime = () => {
             day: 'numeric', 
             year: 'numeric' 
           })})
+          {isCurrentMealFeast && <span className="ml-2 text-yellow-600"> Feast Day!</span>}
         </h1>
         <button 
           onClick={() => navigate('/feedback')}
@@ -143,14 +150,20 @@ const MenuOfTime = () => {
       
       {currentMealItems.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {currentMealItems.map(item => (
-            <MealMenuCard
-              key={item.id}
-              Dish_name={item.Dish_name}
-              type={item.type}
-              id={item.id}
-            />
-          ))}
+          {currentMealItems.map(item => {
+            const meal = todaysMeals.find(meal => meal.id === item.Meal_id);
+            const isItemFeast = meal?.IsFeast === "true";
+            
+            return (
+              <MealMenuCard
+                key={item.id}
+                Dish_name={item.Dish_name}
+                type={item.type}
+                id={item.id}
+                isFeast={isItemFeast}
+              />
+            );
+          })}
         </div>
       ) : (
         <p className="text-center text-gray-500">

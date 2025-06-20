@@ -13,6 +13,7 @@ interface MealData {
   id: string;      
   Meal_type: string;
   Date: Date;
+  IsFeast: string;
 }
 
 const Menu = () => {
@@ -47,9 +48,6 @@ const Menu = () => {
         const menuData = await menuResponse.json();
         const mealData = await mealResponse.json();
 
-        // console.log(mealData.resource);
-
-        // Parse dates from API response - using Date
         const parsedMeals = mealData.resource?.map((meal: any) => ({
           ...meal,
           Date: new Date(meal.Date)
@@ -69,7 +67,6 @@ const Menu = () => {
     fetchAllResources();
   }, []);
 
-  // Simple date comparison function
   const isSameDate = (date1: Date, date2: Date) => {
     return (
       date1.getFullYear() === date2.getFullYear() &&
@@ -78,30 +75,35 @@ const Menu = () => {
     );
   };
 
-  // Filter meals to only include those for today - using Date
   const today = new Date();
   const todaysMeals = meals.filter(meal => meal.Date && isSameDate(meal.Date, today));
 
-  // Create map of meal_id to meal_type using only today's meals
   const mealTypeMap = todaysMeals.reduce<Record<string, string>>((acc, meal) => {
     acc[meal.id] = meal.Meal_type;
     return acc;
   }, {});
 
-  // Filter menu items to only include those with meal IDs from today's meals
   const todaysMenuItems = menuItems.filter(item => 
     todaysMeals.some(meal => meal.id === item.Meal_id)
   );
 
-  // Group today's menu items by meal type
-  const groupedMenu = todaysMenuItems.reduce<Record<string, MenuItem[]>>((acc, item) => {
-    const mealType = mealTypeMap[item.Meal_id] || 'Other';
-    if (!acc[mealType]) acc[mealType] = [];
-    acc[mealType].push(item);
+  const groupedMenu = todaysMenuItems.reduce<Record<string, {items: MenuItem[], isFeast: boolean}>>((acc, item) => {
+    const meal = todaysMeals.find(meal => meal.id === item.Meal_id);
+    const mealType = meal?.Meal_type || 'Other';
+    const isFeast = meal?.IsFeast === "true";
+    
+    if (!acc[mealType]) {
+      acc[mealType] = {items: [], isFeast: false};
+    }
+    acc[mealType].items.push(item);
+    
+    if (isFeast) {
+      acc[mealType].isFeast = true;
+    }
+    
     return acc;
   }, {});
 
-  // Define the order of meal types for consistent display
   const mealTypeOrder = ['Breakfast', 'Lunch', 'Snacks', 'Dinner', 'Other'];
 
   if (isLoading) return <div className="p-4 text-center">Loading menu...</div>;
@@ -126,22 +128,32 @@ const Menu = () => {
         })})
       </h1>
       {mealTypeOrder.map(mealType => {
-        const items = groupedMenu[mealType];
-        if (!items || items.length === 0) return null;
+        const group = groupedMenu[mealType];
+        if (!group || group.items.length === 0) return null;
         
         return (
-          <div key={mealType} className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 border-b pb-2">{mealType}</h2>
+          <div key={mealType} className={`mb-8 ${group.isFeast ? 'border-2 border-yellow-400 p-4 rounded-lg bg-yellow-50' : ''}`}>
+            <h2 className="text-2xl font-bold mb-4 border-b pb-2">
+              {mealType}
+              <br />
+              {group.isFeast && <p className="ml-2 text-yellow-600"> Feast Day!</p>}
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {items.map(item => (
-                <ReviewMenuCard
-                  key={item.id}
-                  Dish_name={item.Dish_name}
-                  type={item.type}
-                  id={item.id}
-                  mealType={mealType}
-                />
-              ))}
+              {group.items.map(item => {
+                const meal = todaysMeals.find(meal => meal.id === item.Meal_id);
+                const isItemFeast = meal?.IsFeast === "true";
+                
+                return (
+                  <ReviewMenuCard
+                    key={item.id}
+                    Dish_name={item.Dish_name}
+                    type={item.type}
+                    id={item.id}
+                    mealType={mealType}
+                    isFeast={isItemFeast}
+                  />
+                );
+              })}
             </div>
           </div>
         );
