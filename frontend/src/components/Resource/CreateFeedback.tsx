@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import apiConfig from '../../config/apiConfig';
 import { useNavigate } from 'react-router-dom';
+import { ImageUploader } from '../../user/components/ImageUploader';
 
 export type resourceMetaData = {
   resource: string;
@@ -121,39 +122,50 @@ const CreateFeedback = () => {
   };
 
   const handleCreate = async () => {
-    const params = new URLSearchParams();
-    const jsonString = JSON.stringify({
-      ...dataToSave,
-      User: HARDCODED_USER_ID
-    });
-    const base64Encoded = btoa(jsonString);
-    params.append('resource', base64Encoded);
-    const ssid: any = sessionStorage.getItem('key');
-    params.append('session_id', ssid);
-    
-    const response = await fetch(apiUrl + `?${params.toString()}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-
-    if (response.ok) {
-      setShowToast(true);
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
-      setDataToSave({});
+    try {
+      const ssid = sessionStorage.getItem('key');
+      
+      // Create form data for the request body instead of URL parameters
+      const formData = new URLSearchParams();
+      const jsonString = JSON.stringify({
+        ...dataToSave,
+        User: HARDCODED_USER_ID // Include the hardcoded user ID
+      });
+      const base64Encoded = btoa(jsonString);
+      
+      formData.append('resource', base64Encoded);
+      formData.append('session_id', ssid || '');
+  
+      console.log("Final data being sent:", dataToSave); // Debug log
+      console.log("JSON string length:", jsonString.length); // Debug log
+      console.log("Base64 encoded length:", base64Encoded.length); // Debug log
+  
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString() // Send data in body instead of URL
+      });
+  
+      if (response.ok) {
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+          navigate('/'); // Redirect after successful submission
+        }, 3000);
+        setDataToSave({});
+      } else {
+        const errorText = await response.text();
+        console.error("Error response:", response.status, errorText);
+        alert(`Error creating feedback: ${response.status} - ${errorText}`);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      alert("Network error: Unable to submit feedback. Please check your connection and try again.");
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Your image upload logic here
-  };
-
-  const handleSearchChange = (fieldName: string, value: string) => {
-    setSearchQueries((prev) => ({ ...prev, [fieldName]: value }));
-  };
 
   const getFormattedDate = (): string => {
     const date = new Date(Date.now());
@@ -212,13 +224,13 @@ const CreateFeedback = () => {
                     <label className="form-label">
                       {field.required && <span className="text-danger">*</span>} {field.name}
                     </label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      name={field.name}
+                    <ImageUploader
+                      value={dataToSave[field.name] || ''}
+                      onChange={(dataUrl) => {
+                        console.log("Image data URL:", dataUrl); // Debug log
+                        setDataToSave({ ...dataToSave, [field.name]: dataUrl });
+                      }}
                       required={field.required}
-                      accept="image/*"
-                      onChange={handleImageUpload}
                     />
                   </div>
                 );
