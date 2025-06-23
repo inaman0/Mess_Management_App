@@ -9,6 +9,12 @@ interface MenuItem {
   type: string;
   id: string;
 }
+const gridStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+  gap: '1rem',
+  padding: '1rem',
+};
 
 interface MealData {
   id: string;
@@ -150,6 +156,7 @@ const MenuOfTime = () => {
       
       {currentMealItems.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div style={gridStyle}>
           {currentMealItems.map(item => {
             const meal = todaysMeals.find(meal => meal.id === item.Meal_id);
             const isItemFeast = meal?.IsFeast === "true";
@@ -164,6 +171,7 @@ const MenuOfTime = () => {
               />
             );
           })}
+          </div>
         </div>
       ) : (
         <p className="text-center text-gray-500">

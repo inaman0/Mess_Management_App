@@ -1,4 +1,6 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import './Custom.css';
 
 interface MenuItemCardProps {
   Dish_name: string;
@@ -9,12 +11,20 @@ interface MenuItemCardProps {
 
 const MealMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, isFeast }) => {
   return (
-    <div className={`border p-4 rounded-lg shadow bg-white hover:shadow-md transition ${
-      isFeast ? 'border-2 border-yellow-400 bg-yellow-50' : ''
-    }`}>
-      <h3 className="text-lg font-semibold">{Dish_name}</h3>
-      <p className="text-sm text-gray-600">{type}</p>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      whileHover={{ scale: 1.02 }}
+      className={`meal-card ${isFeast ? 'feast-border' : ''}`}
+    >
+      <h3 className="dish-name">{Dish_name}</h3>
+      <p className="dish-type">{type}</p>
+
+      {isFeast && (
+        <div className="feast-badge">Feast Special 🎉</div>
+      )}
+    </motion.div>
   );
 };
 

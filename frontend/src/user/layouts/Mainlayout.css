@@ -6,15 +6,16 @@
   
   .main-content {
     flex-grow: 1;
-    transition: margin-left 0.3s ease;
-    margin-left: 0;
+    /* transition: margin-left 0.3s ease;*/
+    margin-left: 0; 
     overflow-y: auto;
   }
   
-  /* When sidebar is open */
+ @media (min-width: 768px) {
   .user-sidebar.open ~ .main-content {
     margin-left: 250px;
   }
+}
   
   .content-container {
     margin-top: 150px;
