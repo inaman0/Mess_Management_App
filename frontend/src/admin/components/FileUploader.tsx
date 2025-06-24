@@ -100,12 +100,12 @@ export default function FileUploader({ uploadUrlMeal,uploadUrlMenuItem,readMealU
           {isUploading ? 'Uploading...' : 'Upload'}
         </button>
       </form>
-      {excelData && (
+      {/* {excelData && (
         <div style={{ marginTop: '20px' }}>
           <h4>Parsed Excel Data (JSON):</h4>
           <pre>{JSON.stringify(excelData, null, 2)}</pre>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

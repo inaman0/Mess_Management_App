@@ -1,7 +1,7 @@
 import React from 'react'
 import CreateFeedback from '../../components/Resource/CreateFeedback'
 import ReadFeedback from '../../components/Resource/ReadFeedback'
-
+import './UserFeedback.css'
 
 const UserFeedback = () => {
   return (

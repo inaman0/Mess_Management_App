@@ -1,0 +1,112 @@
+/* Body and Background */
+body {
+  background-color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+/* Container Styling */
+.container {
+  padding-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Card Styling */
+.card {
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(88, 180, 195, 0.25);
+  border: 1px solid #dff5f9;
+  background-color: #ffffff;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Card Header */
+.card-header {
+  background: linear-gradient(135deg, #58b4c3, #3aa2b1);
+  color: #ffffff;
+  padding: 20px;
+  border-radius: 18px 18px 0 0;
+  text-align: center;
+}
+
+.card-header h4 {
+  font-weight: 700;
+  font-size: 22px;
+  margin: 0;
+}
+
+/* Form Label */
+.form-label {
+  color: #222;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+/* Form Controls */
+.form-control,
+.form-select,
+textarea {
+  background-color: #f1fafd;
+  border: 1px solid #c2e4ea;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+  border-color: #58b4c3;
+  box-shadow: 0 0 6px rgba(88, 180, 195, 0.5);
+  outline: none;
+}
+
+/* Submit Button */
+.btn-success {
+  background: linear-gradient(135deg, #58b4c3, #3aa2b1);
+  border: none;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 10px;
+  width: 100%;
+  transition: background 0.3s ease;
+  color: #fff;
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #4ba4b1, #2894a2);
+}
+
+/* Toast Notifications */
+.toast {
+  border-radius: 12px;
+  border-left: 5px solid #58b4c3;
+  background-color: #f6fcfd;
+  box-shadow: 0 6px 12px rgba(88, 180, 195, 0.1);
+}
+
+.toast-header {
+  background-color: #e6f7fa;
+  border-bottom: none;
+  color: #2894a2;
+  font-weight: 600;
+}
+
+.toast-body {
+  color: #226970;
+  font-weight: 500;
+}
+
+/* Add subtle transition for all inputs */
+input, select, textarea {
+  transition: all 0.2s ease-in-out;
+}

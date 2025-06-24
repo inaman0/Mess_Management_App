@@ -1,0 +1,86 @@
+/* Base card */
+.meal-card {
+  width: 100%;
+  max-width: 300px;
+  min-width: 220px;
+  margin: auto;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: linear-gradient(to bottom right, #d1f7e3, #e7f0ff);
+  border: 1.5px solid #c0e0c0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Responsive padding */
+@media (min-width: 768px) {
+  .meal-card {
+    padding: 1.25rem;
+  }
+}
+
+/* Feast card overrides */
+.feast-card {
+  border: 2px solid transparent;
+  background-image: 
+    linear-gradient(to bottom right, #fffaf0, #fff8e1),
+    linear-gradient(135deg, #facc15, #fcd34d, #fde68a);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  animation: borderGlow 8s ease infinite;
+  box-shadow: 0 4px 16px rgba(251, 191, 36, 0.3);
+}
+
+/* Feast label */
+.feast-badge {
+  margin-top: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #a16207;
+  background-color: #fef3c7;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Typography responsive */
+.dish-name {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #1f2937;
+  word-break: break-word;
+}
+
+.dish-type {
+  margin-top: 4px;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+@media (min-width: 768px) {
+  .dish-name {
+    font-size: 1.25rem;
+  }
+
+  .dish-type {
+    font-size: 1rem;
+  }
+}
+
+/* Border animation */
+@keyframes borderGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

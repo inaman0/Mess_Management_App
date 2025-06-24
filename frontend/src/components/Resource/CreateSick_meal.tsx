@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import apiConfig from '../../config/apiConfig';
 import { useNavigate } from 'react-router-dom';
 
+
 export type resourceMetaData = {
   resource: string;
   fieldValues: any[];

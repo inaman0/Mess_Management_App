@@ -7,6 +7,7 @@ interface MenuItemCardProps {
   type: string;
   id: string;
   mealType: string;
+  isFeast: boolean;
 }
 
 interface Review {
@@ -16,7 +17,7 @@ interface Review {
   User_id: string;
 }
 
-const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, mealType }) => {
+const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, mealType, isFeast }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -27,18 +28,16 @@ const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, meal
   const [ratingAllowed, setRatingAllowed] = useState(false);
   const apireviewUrl = `${apiConfig.getResourceUrl('review')}?`;
 
-  // Define when ratings open for each meal type (24-hour format)
   const ratingStartTimes = {
-    Breakfast: 8,    // 8 AM
-    Lunch: 12,       // 12 PM
-    Snacks: 17,      // 5 PM
-    Dinner: 20       // 8 PM
+    Breakfast: 8,
+    Lunch: 12,
+    Snacks: 17,
+    Dinner: 20
   };
 
   const HARDCODED_USER_ID = "b9cee83b-f548-471e-a700-31bcdaa5a4b5-38";
 
   useEffect(() => {
-    // Check if current time is after the rating start time
     const checkRatingAvailability = () => {
       const now = new Date();
       const currentHour = now.getHours();
@@ -68,7 +67,6 @@ const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, meal
         const reviewData = await response.json();
         setReviews(reviewData.resource || []);
         
-        // Check if current user has already reviewed this item
         const userReviewed = reviewData.resource.some(
           (review: Review) => review.Menu_item_id === id && review.User_id === HARDCODED_USER_ID
         );
@@ -114,7 +112,6 @@ const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, meal
       const params = new URLSearchParams();
       const ssid = sessionStorage.getItem('key') || '';
       
-      
       const reviewData = {
         User_id: HARDCODED_USER_ID,
         Menu_item_id: id,
@@ -152,10 +149,12 @@ const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, meal
   if (error) return <div className="p-4 text-red-500">{error}</div>;
 
   return (
-    <div className="border p-4 rounded-lg shadow bg-white hover:shadow-md transition">
+    <div className={`border p-4 rounded-lg shadow bg-white hover:shadow-md transition ${
+      isFeast ? 'border-2 border-yellow-400 bg-yellow-50' : ''
+    }`}>
       <h3 className="text-lg font-semibold">{Dish_name}</h3>
       <p className="text-sm text-gray-600 mb-1">{type}</p>
-      
+            
       {!ratingAllowed && (
         <div className="text-yellow-600 mb-3">
           Ratings for {mealType} will open at {ratingStartTimes[mealType as keyof typeof ratingStartTimes] || 0}:00

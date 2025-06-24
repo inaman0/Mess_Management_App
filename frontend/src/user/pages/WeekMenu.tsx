@@ -161,6 +161,7 @@ const WeekMenu = () => {
                       Dish_name={item.Dish_name}
                       type={item.type}
                       id={item.id}
+                      isFeast={false}
                     />
                   ))}
                 </div>
