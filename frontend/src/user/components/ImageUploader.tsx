@@ -77,7 +77,7 @@ export const ImageUploader = forwardRef<ImageUploaderHandle, ImageUploaderProps>
 
     return (
       <div>
-        <button className="btn btn-primary" type="button" onClick={openFileDialog}>
+        <button className="btn text-white" style={{ backgroundColor: '#58b4c3' }} type="button" onClick={openFileDialog}>
           Upload Image
         </button>
         <input

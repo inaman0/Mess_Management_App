@@ -58,7 +58,7 @@ export default function Login1(props: any) {
                 boxShadow: "0 2px 8px rgba(33,147,176,0.08)",
                 transition: "background 0.2s",
               }}
-              disabled={!props.isEmailValid() || !props.isPasswordValid()}
+              // disabled={!props.isEmailValid() || !props.isPasswordValid()}
             >
               Login
             </button>

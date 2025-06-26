@@ -1,6 +1,8 @@
+// ReviewMenuCard.tsx
 import React, { useEffect, useState } from 'react';
 import apiConfig from '../../config/apiConfig';
 import { FaStar } from 'react-icons/fa';
+import './ReviewCardStyles.css';
 
 interface MenuItemCardProps {
   Dish_name: string;
@@ -145,47 +147,49 @@ const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, meal
     }
   };
 
-  if (isLoading) return <div className="p-4 text-center">Loading...</div>;
-  if (error) return <div className="p-4 text-red-500">{error}</div>;
+  if (isLoading) return <div className="loading-message">Loading...</div>;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className={`border p-4 rounded-lg shadow bg-white hover:shadow-md transition ${
-      isFeast ? 'border-2 border-yellow-400 bg-yellow-50' : ''
-    }`}>
-      <h3 className="text-lg font-semibold">{Dish_name}</h3>
-      <p className="text-sm text-gray-600 mb-1">{type}</p>
-            
+    <div 
+      className={`review-card ${isFeast ? 'feast' : ''}`}
+      data-meal-type={mealType}
+    >
+      <div className="dish-info-container">
+        <h3 className="dish-name">{Dish_name}</h3>
+        <p className={`dish-type ${type === 'VEG' ? 'dish-type-veg' : 'dish-type-nonveg'}`}>
+          {type}
+        </p>
+      </div>
+      
       {!ratingAllowed && (
-        <div className="text-yellow-600 mb-3">
+        <div className="rating-notice">
           Ratings for {mealType} will open at {ratingStartTimes[mealType as keyof typeof ratingStartTimes] || 0}:00
         </div>
       )}
       
       {hasReviewed ? (
-        <div className="text-green-600 mb-3">You have already rated this item</div>
+        <div className="already-rated">You have already rated this item</div>
       ) : (
         <>
-          <div className="mb-3">
-            <div className="flex">
-              {[1, 2, 3, 4, 5].map((ratingValue) => (
-                <FaStar
-                  key={ratingValue}
-                  size={20}
-                  color={
-                    !ratingAllowed ? "#e4e5e9" : 
-                    newRating && ratingValue <= parseInt(newRating) ? "#ffc107" : "#e4e5e9"
-                  }
-                  onClick={() => handleStarClick(ratingValue)}
-                  className={ratingAllowed ? "cursor-pointer" : "cursor-not-allowed"}
-                />
-              ))}
-            </div>
+          <div className="star-rating">
+            {[1, 2, 3, 4, 5].map((ratingValue) => (
+              <FaStar
+                key={ratingValue}
+                className={`star ${ratingAllowed ? '' : 'disabled'} ${
+                  newRating && ratingValue <= parseInt(newRating) ? 'active' : ''
+                }`}
+                onClick={() => handleStarClick(ratingValue)}
+              />
+            ))}
           </div>
           
           <button
             onClick={handleSubmitReview}
             disabled={isSubmitting || submitSuccess || hasReviewed || !ratingAllowed}
-            className='btn btn-primary'
+            className={`submit-button ${
+              submitSuccess ? 'submit-success' : ''
+            }`}
           >
             {submitSuccess ? 'Submitted!' : 
              hasReviewed ? 'Already Rated' : 

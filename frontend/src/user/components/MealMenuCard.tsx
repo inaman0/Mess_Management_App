@@ -9,22 +9,21 @@ interface MenuItemCardProps {
   isFeast: boolean;
 }
 
-const MealMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, isFeast }) => {
+const MealMenuCard: React.FC<MenuItemCardProps & { mealType?: string }> = ({ 
+  Dish_name, 
+  type, 
+  isFeast,
+  mealType
+}) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.97 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
-      whileHover={{ scale: 1.02 }}
-      className={`meal-card ${isFeast ? 'feast-border' : ''}`}
+    <div
+      className={`meal-card ${isFeast ? 'feast-card' : ''}`}
+      data-meal-type={mealType}
     >
       <h3 className="dish-name">{Dish_name}</h3>
       <p className="dish-type">{type}</p>
-
-      {isFeast && (
-        <div className="feast-badge">Feast Special 🎉</div>
-      )}
-    </motion.div>
+      {isFeast && <div className="feast-badge">Feast Special</div>}
+    </div>
   );
 };
 

@@ -1,6 +1,8 @@
+// Menu.tsx
 import React, { useEffect, useState } from 'react';
 import apiConfig from '../../config/apiConfig';
 import ReviewMenuCard from '../components/ReviewMenuCard';
+import './MenuStyles.css';
 
 interface MenuItem {
   Dish_name: string;
@@ -106,10 +108,10 @@ const Menu = () => {
 
   const mealTypeOrder = ['Breakfast', 'Lunch', 'Snacks', 'Dinner', 'Other'];
 
-  if (isLoading) return <div className="p-4 text-center">Loading menu...</div>;
-  if (error) return <div className="p-4 text-red-500">{error}</div>;
+  if (isLoading) return <div className="loading-message">Loading menu...</div>;
+  if (error) return <div className="error-message">{error}</div>;
   if (todaysMenuItems.length === 0) return (
-    <div className="p-4 text-center">
+    <div className="empty-message">
       No menu items available for today ({today.toLocaleDateString('en-US', { 
         month: 'short', 
         day: 'numeric', 
@@ -119,41 +121,42 @@ const Menu = () => {
   );
 
   return (
-    <div className="p-4">
-      <h1 className="text-3xl font-bold mb-6">
-        Today's Menu ({today.toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric', 
-          year: 'numeric' 
-        })})
-      </h1>
+    <div className="menu-container">
+      <div className="header-container">
+        <h1 className="current-meal-title">
+          Today's Menu ({today.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric' 
+          })})
+        </h1>
+      </div>
+      
       {mealTypeOrder.map(mealType => {
         const group = groupedMenu[mealType];
         if (!group || group.items.length === 0) return null;
         
         return (
-          <div key={mealType} className={`mb-8 ${group.isFeast ? 'border-2 border-yellow-400 p-4 rounded-lg bg-yellow-50' : ''}`}>
-            <h2 className="text-2xl font-bold mb-4 border-b pb-2">
-              {mealType}
-              <br />
-              {group.isFeast && <p className="ml-2 text-yellow-600"> Feast Day!</p>}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {group.items.map(item => {
-                const meal = todaysMeals.find(meal => meal.id === item.Meal_id);
-                const isItemFeast = meal?.IsFeast === "true";
-                
-                return (
+          <div key={mealType} className={`meal-type-section ${group.isFeast ? 'feast-section' : ''}`}>
+            <div className="meal-type-header">
+              <h2 className="meal-type-title">
+                {mealType}
+                {group.isFeast && <span className="feast-label">Feast Day!</span>}
+              </h2>
+            </div>
+            <div className="meal-cards-container">
+              <div className="meal-cards-row">
+                {group.items.map(item => (
                   <ReviewMenuCard
                     key={item.id}
                     Dish_name={item.Dish_name}
                     type={item.type}
                     id={item.id}
                     mealType={mealType}
-                    isFeast={isItemFeast}
+                    isFeast={group.isFeast}
                   />
-                );
-              })}
+                ))}
+              </div>
             </div>
           </div>
         );

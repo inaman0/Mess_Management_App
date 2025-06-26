@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import apiConfig from '../../config/apiConfig';
 import MealMenuCard from '../components/MealMenuCard';
 import { useNavigate } from 'react-router-dom';
+import '../components/Custom.css';
 
 interface MenuItem {
   Dish_name: string;
@@ -9,12 +10,6 @@ interface MenuItem {
   type: string;
   id: string;
 }
-const gridStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-  gap: '1rem',
-  padding: '1rem',
-};
 
 interface MealData {
   id: string;
@@ -131,57 +126,64 @@ const MenuOfTime = () => {
     setIsCurrentMealFeast(currentMeal?.IsFeast === "true");
   }, [currentMealType, todaysMeals]);
 
-  if (isLoading) return <div className="p-4 text-center">Loading menu...</div>;
-  if (error) return <div className="p-4 text-red-500">{error}</div>;
-  if (menuItems.length === 0) return <div className="p-4 text-center">No menu items available</div>;
+  if (isLoading) return <div className="loading-message">Loading menu...</div>;
+  if (error) return <div className="error-message">{error}</div>;
+  if (menuItems.length === 0) return <div className="empty-message">No menu items available</div>;
 
   return (
-    <div className={`p-4 ${isCurrentMealFeast ? 'bg-yellow-50' : ''}`}>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="h1 m-0">
+    <div className={`menu-container ${isCurrentMealFeast ? 'feast-container' : ''}`}>
+      <div className="header-container">
+        <h1 className="current-meal-title">
           Today's {currentMealType} Menu ({today.toLocaleDateString('en-US', { 
             month: 'short', 
             day: 'numeric', 
             year: 'numeric' 
           })})
-          {isCurrentMealFeast && <span className="ml-2 text-yellow-600"> Feast Day!</span>}
+          {isCurrentMealFeast && <span className="feast-label"> Feast Day!</span>}
         </h1>
         <button 
           onClick={() => navigate('/feedback')}
-          className="btn btn-primary"
+          className="feedback-button"
         >
           Give Feedback
         </button>
       </div>
       
       {currentMealItems.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <div style={gridStyle}>
-          {currentMealItems.map(item => {
-            const meal = todaysMeals.find(meal => meal.id === item.Meal_id);
-            const isItemFeast = meal?.IsFeast === "true";
-            
-            return (
-              <MealMenuCard
-                key={item.id}
-                Dish_name={item.Dish_name}
-                type={item.type}
-                id={item.id}
-                isFeast={isItemFeast}
-              />
-            );
-          })}
+        <div className="meal-cards-container">
+          <div className="meal-type-row">
+            {currentMealItems.map(item => {
+              const meal = todaysMeals.find(meal => meal.id === item.Meal_id);
+              const isItemFeast = meal?.IsFeast === "true";
+              
+              return (
+                <div 
+                  key={item.id} 
+                  className={`meal-card ${isItemFeast ? 'feast-card' : ''}`}
+                  data-meal-type={currentMealType}
+                >
+                  <div className="meal-card-content">
+                    <div className="dish-name-container">
+                      <h3 className="dish-name">{item.Dish_name}</h3>
+                      <p className={`dish-type ${item.type === 'Veg' ? 'dish-type-veg' : 'dish-type-nonveg'}`}>
+                        {item.type === 'Veg' ? 'VEG' : 'NON-VEG'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       ) : (
-        <p className="text-center text-gray-500">
+        <p className="no-items-message">
           No {currentMealType} items available for today
         </p>
       )}
 
-      <div className="mt-8 text-sm text-gray-500">
-        <p>Meal times:</p>
-        <ul className="list-disc pl-5">
+      <div className="meal-times-info">
+        <p className="info-title">Meal times:</p>
+        <ul className="times-list">
           <li>Breakfast: 7:30 AM - 9:30 AM</li>
           <li>Lunch: 12:30 AM - 2:30 PM</li>
           <li>Snacks: 4:30 PM - 6 PM</li>
