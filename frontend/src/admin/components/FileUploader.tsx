@@ -67,45 +67,84 @@ export default function FileUploader({ uploadUrlMeal,uploadUrlMenuItem,readMealU
     }
   };
 
+  // const getStatusMessage = () => {
+  //   if (!showStatus) return null;
+  //   if (uploadStatus === 'success') return <div className="status-box success">Upload successful!</div>;
+  //   if (uploadStatus === 'partial') return <div className="status-box warning">Partially uploaded.</div>;
+  //   if (uploadStatus === 'error') return <div className="status-box error">Upload failed.</div>;
+  //   return null;
+  // };
+
   const getStatusMessage = () => {
-    if (!showStatus) return null;
-    if (uploadStatus === 'success') return <div className="status-box success">Upload successful!</div>;
-    if (uploadStatus === 'partial') return <div className="status-box warning">Partially uploaded.</div>;
-    if (uploadStatus === 'error') return <div className="status-box error">Upload failed.</div>;
-    return null;
+  if (!showStatus) return null;
+
+  const handleClose = () => {
+    setShowStatus(false);
+    setSelectedFile(null);
+    setExcelData(null);
+    setUploadStatus('');
+    setIsUploading(false);
+    setIsDragActive(true); // Reset drag state
   };
+  let className = '';
+  let message = '';
+
+  if (uploadStatus === 'success') {
+    className = 'status-box success';
+    message = 'Upload successful!';
+  } else if (uploadStatus === 'partial') {
+    className = 'status-box warning';
+    message = 'Partially uploaded.';
+  } else if (uploadStatus === 'error') {
+    className = 'status-box error';
+    message = 'Upload failed.';
+  } else {
+    return null;
+  }
 
   return (
-    <div className="uploader-wrapper">
-      {getStatusMessage()}
-      <form onSubmit={handleSubmit} className="upload-form">
-        <div
-          className={`drop-area ${isDragActive ? 'drag-active' : ''}`}
-          onDragOver={(e) => { e.preventDefault(); setIsDragActive(true); }}
-          onDragLeave={() => setIsDragActive(false)}
-          onDrop={handleDrop}
-        >
-          <input type="file" accept=".xlsx" onChange={handleFileSelect} id="fileInput" className="hidden-input" />
-          <label htmlFor="fileInput" className="file-label">
-            <div className="drop-message">
-              <div className="drop-icon">📂</div>
-              <div className="drop-text">
-                {selectedFile ? selectedFile.name : 'Drag & drop .xlsx here or click to browse'}
-              </div>
-              <div className="drop-subtext">Only .xlsx files are supported</div>
-            </div>
-          </label>
-        </div>
-        <button type="submit" className="upload-button" disabled={!selectedFile || isUploading}>
-          {isUploading ? 'Uploading...' : 'Upload'}
-        </button>
-      </form>
-      {/* {excelData && (
-        <div style={{ marginTop: '20px' }}>
-          <h4>Parsed Excel Data (JSON):</h4>
-          <pre>{JSON.stringify(excelData, null, 2)}</pre>
-        </div>
-      )} */}
+    <div className={className}>
+      <span>{message}</span>
+      <button className="close-btn" onClick={handleClose}>✕</button>
     </div>
+  );
+};
+
+
+  return (
+    <>
+      <h2 className='title'>Upload Menu </h2> 
+      <div className="uploader-wrapper">
+        {getStatusMessage()}
+        <form onSubmit={handleSubmit} className="upload-form">
+          <div
+            className={`drop-area ${isDragActive ? 'drag-active' : ''}`}
+            onDragOver={(e) => { e.preventDefault(); setIsDragActive(true); }}
+            onDragLeave={() => setIsDragActive(false)}
+            onDrop={handleDrop}
+          >
+            <input type="file" accept=".xlsx" onChange={handleFileSelect} id="fileInput" className="hidden-input" />
+            <label htmlFor="fileInput" className="file-label">
+              <div className="drop-message">
+                <div className="drop-icon">📂</div>
+                <div className="drop-text">
+                  {selectedFile ? selectedFile.name : 'Drag & drop .xlsx here or click to browse'}
+                </div>
+                <div className="drop-subtext">Only .xlsx files are supported</div>
+              </div>
+            </label>
+          </div>
+          <button type="submit" className="upload-button" disabled={!selectedFile || isUploading}>
+            {isUploading ? 'Uploading...' : 'Upload'}
+          </button>
+        </form>
+        {/* {excelData && (
+          <div style={{ marginTop: '20px' }}>
+            <h4>Parsed Excel Data (JSON):</h4>
+            <pre>{JSON.stringify(excelData, null, 2)}</pre>
+          </div>
+        )} */}
+      </div>
+    </>
   );
 }

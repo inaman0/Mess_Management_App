@@ -4,7 +4,7 @@ const Background = () => {
   return (
 
         <img 
-          src="Background.png"
+          src="/Background.png"
           alt="Admin Background"
           className="admin-background"
         />

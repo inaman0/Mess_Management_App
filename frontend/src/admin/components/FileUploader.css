@@ -1,8 +1,18 @@
+.title {
+  z-index: 10;
+  position: absolute;
+  top: 45px;
+  left: 120px;
+  font-size: 2rem;
+  /* font-weight: bold; */
+  color: #ffffff; /* Dark gray for better contrast */
+}
+
 .uploader-wrapper {
-  max-width: 80%;  /* Increased from 42rem to cover more of the page width */
-  min-height: 75vh;  /* Makes it cover most of the viewport height */
+  max-width: 85%;  /* Increased from 42rem to cover more of the page width */
+  min-height: 80vh;  /* Makes it cover most of the viewport height */
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   margin-top: 100px;  /* Reduced from 50px to position it higher */
   background-color: rgba(255, 255, 255, 0.9);;  /* Light gray background */
   border-radius: 0.75rem;     /* Rounded corners for the wrapper */
@@ -27,11 +37,19 @@
   padding: 2rem;
   text-align: center;
   transition: background-color 0.3s, border-color 0.3s;
+  height: 200px;
+  min-width: 500px;  /* Ensures the drop area is wide enough */
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .drop-area.drag-active {
-  border-color: #3b82f6;
-  background-color: #eff6ff;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 .hidden-input {
@@ -112,6 +130,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  min-width: 500px;
 }
 
 .status-box.success {
@@ -134,4 +153,10 @@
 .icon-small {
   width: 1rem;
   height: 1rem;
+}
+
+.status-box .close-btn {
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  color: inherit;
 }
