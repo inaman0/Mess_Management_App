@@ -86,13 +86,3 @@
   }
 }
 
-.toggle-column {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100px;
-  height: 100vh;
-  background: rgba(255, 255, 255, 0.9);
-  z-index: 1049;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-}

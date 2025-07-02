@@ -37,7 +37,7 @@ const ReviewMenuCard: React.FC<MenuItemCardProps> = ({ Dish_name, type, id, meal
     Dinner: 20
   };
 
-  const HARDCODED_USER_ID = "b9cee83b-f548-471e-a700-31bcdaa5a4b5-38";
+  const HARDCODED_USER_ID = "ee9f67bb-bbe1-4b28-9be5-7d36be9d9f16-20";
 
   useEffect(() => {
     const checkRatingAvailability = () => {
