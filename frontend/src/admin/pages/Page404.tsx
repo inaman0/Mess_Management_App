@@ -7,7 +7,7 @@ const Page404 = () => {
     <div className="page404-container">
       <div className="page404-content">
         <h1 className="page404-code">404</h1>
-        <p className="page404-message">Oops! The page you're looking for doesn't exist.</p>
+        <p className="page404-message">The page you're looking for doesn't exist.</p>
         <Link to="/admin" className="page404-button">Go Back to Dashboard</Link>
       </div>
       

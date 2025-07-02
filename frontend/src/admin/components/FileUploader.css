@@ -8,10 +8,13 @@
   color: #ffffff; /* Dark gray for better contrast */
 }
 
+
+
 .uploader-wrapper {
   max-width: 85%;  /* Increased from 42rem to cover more of the page width */
   min-height: 80vh;  /* Makes it cover most of the viewport height */
   margin: 0 auto;
+  margin-bottom: 50px;
   padding: 1rem;
   margin-top: 100px;  /* Reduced from 50px to position it higher */
   background-color: rgba(255, 255, 255, 0.9);;  /* Light gray background */
@@ -38,7 +41,7 @@
   text-align: center;
   transition: background-color 0.3s, border-color 0.3s;
   height: 200px;
-  min-width: 500px;  /* Ensures the drop area is wide enough */
+  min-width: 30vw;  /* Ensures the drop area is wide enough */
   justify-content: center;
   display: flex;
   flex-direction: column;
@@ -159,4 +162,20 @@
   font-size: 1.2rem;
   margin-left: 1rem;
   color: inherit;
+}
+
+@media screen and (max-width: 768px) {
+  .title {
+    position: relative; /* Change to relative for small screens */
+    top: 50px;
+    left: 10px;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .uploader-wrapper {
+    margin-top: 60px; /* Reduced top margin for small screens */
+  }
 }
