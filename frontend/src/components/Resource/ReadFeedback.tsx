@@ -11,15 +11,19 @@ const ReadFeedback = () => {
   const [resMetaData, setResMetaData] = useState<ResourceMetaData[]>([]);
   const [fields, setFields] = useState<any[]>([]);
   const [showToast, setShowToast] = useState<boolean>(false);
+  const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
 
   const regex = /^(g_|archived|extra_data)/;
   const apiUrl = `${apiConfig.getResourceUrl('feedback')}?`;
   const metadataUrl = `${apiConfig.getResourceMetaDataUrl('Feedback')}?`;
-  const [imageurl, setImageUrl] = useState<string>('');
 
-  const removesapce = (img: string) => {
+  // Format image URL and store in state
+  const formatImageUrl = (img: string, id: string | number) => {
     const formattedUrl = img.replace(/\s/g, '+');
-    setImageUrl(formattedUrl);
+    setImageUrls(prev => ({
+      ...prev,
+      [id]: formattedUrl
+    }));
   };
   
   // Fetch resource data
@@ -37,10 +41,20 @@ const ReadFeedback = () => {
         });
         if (!response.ok) throw new Error('Error:' + response.status);
         const data = await response.json();
-        // console.log(data.resource)
-        if (data.resource.length > 0 && data.resource[0].Image) {
-          removesapce(data.resource[0].Image)
+        
+        // Process images for all feedback items
+        if (data.resource.length > 0) {
+          const newImageUrls: Record<string, string> = {};
+          for (let i = 0; i < data.resource.length; i++) {
+            if (data.resource[i].Image) {
+              // Use the feedback's ID or index as the key
+              const id = data.resource[i].id || i;
+              newImageUrls[id] = data.resource[i].Image.replace(/\s/g, '+');
+            }
+          }
+          setImageUrls(newImageUrls);
         }
+        
         setFeedbackData(data.resource || []);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -96,7 +110,7 @@ const ReadFeedback = () => {
                         feedback[field.name] ? (
                           <div className="mt-2">
                             <img 
-                              src={imageurl} 
+                              src={imageUrls[feedback.id || index]} 
                               alt="Feedback" 
                               className="img-thumbnail" 
                               style={{ 
