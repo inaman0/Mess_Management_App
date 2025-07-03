@@ -2,7 +2,12 @@ import React from 'react'
 
 const Feedback = () => {
   return (
-    <div>Feedback</div>
+    <>
+      <h1 className="title">Feedback</h1>
+      <div className="uploader-wrapper">
+        {/* Your upload menu components go here */}
+      </div>
+    </>
   )
 }
 

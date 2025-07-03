@@ -51,10 +51,10 @@ function App() {
       
       {/* Admin routes */}
       <Route path='/admin' element={<AdminLayout />}>
-        <Route index element={<UploadMenu />} />
-        <Route path='add-feast' element={<AddFeast />} />
+        <Route index element={<WeeklyRatings />} />
+        <Route path='upload-menu' element={<UploadMenu />} />
+        {/* <Route path='add-feast' element={<AddFeast />} /> */}
         <Route path='edit-menu' element={<EditMenu />} />
-        <Route path='weeks-menu' element={<WeeklyRatings />} />
         <Route path='feedback' element={<Feedback />} />
         <Route path='*' element={<Page404 />} />
       </Route>

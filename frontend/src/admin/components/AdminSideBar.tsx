@@ -39,23 +39,24 @@ const AdminSidebar = () => {
           <h6 className="mb-3 fw-bold">Information Technology Bangalore</h6>
         </div>
         <nav className="nav flex-column px-3">
-          <NavLink to="/admin" end className="nav-link" onClick={toggleSidebar}>
-            Upload Menu
-          </NavLink>
           <NavLink
-            to="/admin/weeks-menu"
+            to="/admin"
             className="nav-link"
             onClick={toggleSidebar}
+            end
           >
-            Weekly Rating
+            Ratings
           </NavLink>
-          <NavLink
+          <NavLink to="/admin/upload-menu" className="nav-link" onClick={toggleSidebar}>
+            Upload Menu
+          </NavLink>
+          {/* <NavLink
             to="/admin/add-feast"
             className="nav-link"
             onClick={toggleSidebar}
           >
             Add Feast
-          </NavLink>
+          </NavLink> */}
           <NavLink
             to="/admin/edit-menu"
             className="nav-link"
