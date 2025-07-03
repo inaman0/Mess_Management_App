@@ -165,16 +165,11 @@
 
 @media screen and (max-width: 768px) {
   .title {
-    position: relative; /* Change to relative for small screens */
-    top: 50px;
-    left: 10px;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    text-align: center;
-    width: 100%;
+    translate: -20px 0;
+    font-size: 1.5rem; /* Smaller font size for small screens */
   }
   
   .uploader-wrapper {
-    margin-top: 60px; /* Reduced top margin for small screens */
+    margin-top: 90px; /* Reduced top margin for small screens */
   }
 }

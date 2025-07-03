@@ -36,6 +36,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .page404-code {
@@ -43,12 +44,14 @@
   color: #3879FF;
   margin-bottom: 1rem;
   font-weight: bold;
+  text-align: center;
 }
 
 .page404-message {
   font-size: 1.25rem;
   color: #334155;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .page404-button {
@@ -79,7 +82,13 @@
 
 @media screen and (max-width: 768px) {
   .page404-container {
-    margin-top: 60px;
+    margin-top: 90px;
+  }
+
+  .title {
+    translate: -20px 0;
+    font-size: 1.5rem; /* Smaller font size for small screens */
   }
 }
+
 
