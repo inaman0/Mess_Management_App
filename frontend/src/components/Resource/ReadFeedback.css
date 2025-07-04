@@ -1,0 +1,174 @@
+
+
+.feedback-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns */
+  gap: 1.2rem;
+  justify-items: center;
+  align-items: start;
+}
+
+.feedback-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.2rem;
+  width: 100%;
+  max-width: 250px;
+  height: 500px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+
+.feedback-item {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.feedback-image {
+  width: 100%;
+  height: 150px; /* fixed height */
+  object-fit: contain; /* makes it cover entire area */
+  margin-bottom: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.feedback-field {
+  flex: 1;
+  overflow: hidden;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.feedback-description {
+  height: 60px; /* fixed height */
+  overflow-y: auto;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  padding-right: 4px;
+  margin-bottom: 20px;
+}
+
+
+.feedback-text-scroll {
+  height: 60px; /* fixed height */
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-top: 4px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.feedback-text-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.feedback-text-scroll::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.feedback-text-scroll::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.feedback-image:hover {
+  transform: scale(1.05);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pagination-button {
+  background-color: #0d6efd;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  min-width: 100px;
+  text-align: center;
+}
+
+.pagination-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.page-count {
+  font-weight: 500;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  position: relative;
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  max-width: 80vw;
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.modal-content img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.whatsapp-share {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.whatsapp-icon {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.whatsapp-icon:hover {
+  transform: scale(1.1);
+}

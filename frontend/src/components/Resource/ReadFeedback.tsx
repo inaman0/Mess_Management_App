@@ -1,65 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import apiConfig from '../../config/apiConfig';
-
+import './ReadFeedback.css'; // Assuming you have a CSS file for styling
 export type ResourceMetaData = {
-  "resource": string,
-  "fieldValues": any[]
+  resource: string;
+  fieldValues: any[];
 };
 
 const ReadFeedback = () => {
   const [feedbackData, setFeedbackData] = useState<any[]>([]);
   const [resMetaData, setResMetaData] = useState<ResourceMetaData[]>([]);
   const [fields, setFields] = useState<any[]>([]);
-  const [showToast, setShowToast] = useState<boolean>(false);
-  const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
+  const itemsPerPage = 5;
   const regex = /^(g_|archived|extra_data)/;
+
   const apiUrl = `${apiConfig.getResourceUrl('feedback')}?`;
   const metadataUrl = `${apiConfig.getResourceMetaDataUrl('Feedback')}?`;
 
-  // Format image URL and store in state
-  const formatImageUrl = (img: string, id: string | number) => {
-    const formattedUrl = img.replace(/\s/g, '+');
-    setImageUrls(prev => ({
-      ...prev,
-      [id]: formattedUrl
-    }));
-  };
-  
-  // Fetch resource data
+  // Fetch data
   useEffect(() => {
     const fetchResourceData = async () => {
       const params = new URLSearchParams();
       const ssid: any = sessionStorage.getItem('key');
-      const queryId: any = 'GET_ALL';
+      const queryId = 'GET_ALL';
       params.append('queryId', queryId);
       params.append('session_id', ssid);
+
       try {
         const response = await fetch(apiUrl + params.toString(), {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
+
         if (!response.ok) throw new Error('Error:' + response.status);
         const data = await response.json();
-        
-        // Process images for all feedback items
-        if (data.resource.length > 0) {
-          const newImageUrls: Record<string, string> = {};
-          for (let i = 0; i < data.resource.length; i++) {
-            if (data.resource[i].Image) {
-              // Use the feedback's ID or index as the key
-              const id = data.resource[i].id || i;
-              newImageUrls[id] = data.resource[i].Image.replace(/\s/g, '+');
-            }
-          }
-          setImageUrls(newImageUrls);
-        }
-        
         setFeedbackData(data.resource || []);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching feedback data:', error);
       }
     };
+
     fetchResourceData();
   }, []);
 
@@ -71,87 +53,131 @@ const ReadFeedback = () => {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
-        if (response.ok) {
-          const metaData = await response.json();
-          setResMetaData(metaData);
-          setFields(metaData[0]?.fieldValues || []);
-        } else {
-          console.error('Failed to fetch metadata:' + response.statusText);
-        }
+        if (!response.ok) throw new Error('Error:' + response.status);
+        const metaData = await response.json();
+        setResMetaData(metaData);
+        setFields(metaData[0]?.fieldValues || []);
       } catch (error) {
         console.error('Error fetching metadata:', error);
       }
     };
+
     fetchResMetaData();
   }, []);
-  // console.log(fields)
 
-  // Filter out system fields and get displayable fields
-  const displayFields = fields.filter(field => !regex.test(field.name) && field.name !== 'id');
+  const displayFields = fields.filter(
+    (field) => !regex.test(field.name) && field.name !== 'id'
+  );
+
+
+  // Pagination logic
+  const totalPages = Math.ceil(feedbackData.length / itemsPerPage);
+  const paginatedData = feedbackData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // whatsapp sharing function
+  const shareOnWhatsApp = (feedback: any) => {
+  const rating = feedback['Rating'] || feedback['rating'] || 'N/A';
+  const description = feedback['Description'] || feedback['Feedback'] || feedback['feedback'] || 'No feedback provided';
+  const date = feedback['Date'] || feedback['date'] || '';
+
+  let text = `Rating: ${rating} stars\nFeedback: ${description}`;
+  if (date) {
+    text += `\nDate: ${new Date(date).toLocaleDateString()}`;
+  }
+
+  if (feedback['Image']) {
+    text += `\nImage: ${feedback['Image'].replace(/\s/g, '+')}`;
+  }
+
+  const encodedText = encodeURIComponent(text);
+  window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+};
+
 
   return (
-    <div className="container">
-      <div className="my-4">
-        <h2>Feedback</h2>
+    <div className="feedback-container">
+      <div className="feedback-header">
+        <h2>Student Feedback</h2>
       </div>
 
-      {feedbackData.length === 0 ? (
-        <div className="alert alert-info">No feedback data available.</div>
+      {paginatedData.length === 0 ? (
+        <div className="alert">No feedback data available.</div>
       ) : (
-        <div className="row">
-          {feedbackData.map((feedback, index) => (
-            <div key={index} className="col-md-6 col-lg-4 mb-4">
-              <div className="card h-100">
-                <div className="card-body">
-                  {displayFields.map((field) => (
-                    <div key={field.name} className="mb-3">
-                      <strong>{field.name}:</strong>
-                      {field.name === 'Image' ? (
-                        feedback[field.name] ? (
-                          <div className="mt-2">
-                            <img 
-                              src={imageUrls[feedback.id || index]} 
-                              alt="Feedback" 
-                              className="img-thumbnail" 
-                              style={{ 
-                                maxWidth: "100%", 
-                                height: "auto",
-                                maxHeight: "200px",
-                                objectFit: "contain" 
-                              }} 
-                            />
-                          </div>
-                        ) : (
-                          <span className="ms-2">N/A</span>
-                        )
+        <div className="feedback-grid">
+          {paginatedData.map((feedback, index) => (
+            <div key={index} className="feedback-card">
+              
+              {displayFields.map((field) => (
+                  <div key={field.name} className="feedback-item">
+                    <strong>{field.name}:</strong>{' '}
+                    {field.name === 'Image' && feedback[field.name] ? (
+                      <img
+                        src={feedback[field.name].replace(/\s/g, '+')}
+                        alt="Feedback"
+                        className="feedback-image"
+                        onClick={() =>
+                          setSelectedImage(feedback[field.name].replace(/\s/g, '+'))
+                        }
+                      />
+                    ) : (
+                      (field.name.toLowerCase() === 'description' || field.name.toLowerCase() === 'feedback') ? (
+                        <div className="feedback-text-scroll">
+                          <span>{feedback[field.name] || 'N/A'}</span>
+                        </div>
                       ) : (
-                        <span className="ms-2">
-                          {feedback[field.name] || 'N/A'}
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                        <span>{feedback[field.name] || 'N/A'}</span>
+                      )
+                    )}
+                  </div>
+                ))}
+              <div className="whatsapp-share">
+                <img
+                  src="/Whatsapp.png"
+                  alt="Share on WhatsApp"
+                  className="whatsapp-icon"
+                  onClick={() => shareOnWhatsApp(feedback)}
+                  title="Share on WhatsApp"
+                />
               </div>
             </div>
           ))}
+          
         </div>
       )}
 
-      {showToast && (
-        <div className="toast-container position-fixed top-0 end-0 p-3">
-          <div className="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-            <div className="toast-header">
-              <strong className="me-auto">Success</strong>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={() => setShowToast(false)}
-              ></button>
-            </div>
-            <div className="toast-body text-success">
-              Feedback submitted successfully!
-            </div>
+      {/* Pagination */}
+      <div className="pagination">
+        <button
+          className="pagination-button"
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        >
+          Previous
+        </button>
+        <span className="page-count">Page {currentPage} of {totalPages}</span>
+        <button
+          className="pagination-button"
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        >
+          Next
+        </button>
+      </div>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div className="modal-overlay" onClick={() => setSelectedImage(null)}>
+          <div className="modal-content">
+            <img src={selectedImage} alt="Full Feedback" />
+            <button
+              className="modal-close"
+              onClick={() => setSelectedImage(null)}
+            >
+              &times;
+            </button>
           </div>
         </div>
       )}
