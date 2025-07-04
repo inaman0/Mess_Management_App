@@ -77,24 +77,24 @@ const ReadFeedback = () => {
     currentPage * itemsPerPage
   );
 
-  // whatsapp sharing function
-  const shareOnWhatsApp = (feedback: any) => {
-  const rating = feedback['Rating'] || feedback['rating'] || 'N/A';
-  const description = feedback['Description'] || feedback['Feedback'] || feedback['feedback'] || 'No feedback provided';
-  const date = feedback['Date'] || feedback['date'] || '';
+//   // whatsapp sharing function
+//   const shareOnWhatsApp = (feedback: any) => {
+//   const rating = feedback['Rating'] || feedback['rating'] || 'N/A';
+//   const description = feedback['Description'] || feedback['Feedback'] || feedback['feedback'] || 'No feedback provided';
+//   const date = feedback['Date'] || feedback['date'] || '';
 
-  let text = `Rating: ${rating} stars\nFeedback: ${description}`;
-  if (date) {
-    text += `\nDate: ${new Date(date).toLocaleDateString()}`;
-  }
+//   let text = `Rating: ${rating} stars\nFeedback: ${description}`;
+//   if (date) {
+//     text += `\nDate: ${new Date(date).toLocaleDateString()}`;
+//   }
 
-  if (feedback['Image']) {
-    text += `\nImage: ${feedback['Image'].replace(/\s/g, '+')}`;
-  }
+//   if (feedback['Image']) {
+//     text += `\nImage: ${feedback['Image'].replace(/\s/g, '+')}`;
+//   }
 
-  const encodedText = encodeURIComponent(text);
-  window.open(`https://wa.me/?text=${encodedText}`, '_blank');
-};
+//   const encodedText = encodeURIComponent(text);
+//   window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+// };
 
 
   return (
@@ -133,7 +133,7 @@ const ReadFeedback = () => {
                     )}
                   </div>
                 ))}
-              <div className="whatsapp-share">
+              {/* <div className="whatsapp-share">
                 <img
                   src="/Whatsapp.png"
                   alt="Share on WhatsApp"
@@ -141,7 +141,7 @@ const ReadFeedback = () => {
                   onClick={() => shareOnWhatsApp(feedback)}
                   title="Share on WhatsApp"
                 />
-              </div>
+              </div> */}
             </div>
           ))}
           
