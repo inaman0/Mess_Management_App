@@ -155,3 +155,14 @@
   cursor: pointer;
 }
 
+@media (max-width: 768px) {
+  .feedback-grid {
+    grid-template-columns: 1fr; /* One column per row */
+    justify-items: center;
+  }
+
+  .feedback-card {
+    max-width: 90%; /* Take up more width on small screens */
+    height: auto;   /* Optional: let height adjust to content */
+  }
+}
