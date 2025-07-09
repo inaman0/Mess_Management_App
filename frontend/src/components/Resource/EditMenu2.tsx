@@ -114,7 +114,7 @@ const EditMenu2 = () => {
     }
 
     const results = meals.filter(meal => {
-      const mealDate = new Date(meal.Date).toISOString().split('T')[0];
+      const mealDate = new Date(meal.Date).toLocaleDateString('en-CA');
       return mealDate === date && activeTypes.includes(meal.Meal_type);
     });
 
