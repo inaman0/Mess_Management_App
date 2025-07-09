@@ -2,6 +2,7 @@ import React from 'react'
 import UpdateMenu_item from '../../components/Resource/UpdateMenu_item'
 import UpdateMeal from '../../components/Resource/UpdateMeal'
 import EditMenuComponent from '../../components/Resource/EditMenuComponent'
+import UpdateMenu from '../../components/Resource/UpdateMenu'
 
 const EditMenu = () => {
   return (
@@ -11,7 +12,7 @@ const EditMenu = () => {
         {/* Your upload menu components go here */}
         <UpdateMenu_item />
         <UpdateMeal />  
-        <EditMenuComponent />      
+        <UpdateMenu />
       </div>
     </>
   )
