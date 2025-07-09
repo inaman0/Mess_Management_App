@@ -24,7 +24,7 @@ const MealMenuCard: React.FC<MenuItemCardProps & { mealType?: string }> = ({
       data-meal-type={mealType}
     >
       <h3 className="dish-name">{Dish_name}</h3>
-      <p className={`dish-type ${typeColorClass}`}>{type}</p>
+      <p className="veg-text">{type}</p>
       {isFeast && <div className="feast-badge">Feast Special</div>}
     </div>
   );
