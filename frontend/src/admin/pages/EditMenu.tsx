@@ -3,6 +3,7 @@ import UpdateMenu_item from '../../components/Resource/UpdateMenu_item'
 import UpdateMeal from '../../components/Resource/UpdateMeal'
 import EditMenuComponent from '../../components/Resource/EditMenuComponent'
 import UpdateMenu from '../../components/Resource/UpdateMenu'
+import EditMenu2 from '../../components/Resource/EditMenu2'
 
 const EditMenu = () => {
   return (
@@ -13,6 +14,7 @@ const EditMenu = () => {
         <UpdateMenu_item />
         <UpdateMeal />  
         <UpdateMenu />
+        <EditMenu2/>
       </div>
     </>
   )
