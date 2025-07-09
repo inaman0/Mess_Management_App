@@ -1,39 +1,165 @@
-.title {
+.wr-title {
   z-index: 10;
   position: absolute;
   top: 45px;
   left: 120px;
   font-size: 2rem;
-  /* font-weight: bold; */
-  color: #ffffff; /* Dark gray for better contrast */
+  color: #ffffff;
 }
 
-
-.uploader-wrapper {
-  max-width: 85%;  /* Increased from 42rem to cover more of the page width */
-  min-height: 80vh;  /* Makes it cover most of the viewport height */
+.wr-uploader-wrapper {
+  max-width: 85%;
+  min-height: 80vh;
   margin: 0 auto;
   margin-bottom: 50px;
   padding: 1rem;
-  margin-top: 100px;  /* Reduced from 50px to position it higher */
-  background-color: rgba(255, 255, 255, 0.9);;  /* Light gray background */
-  border-radius: 0.75rem;     /* Rounded corners for the wrapper */
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-  position: relative;  /* Establishes positioning context for child elements */
+  margin-top: 100px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* Centers child components vertically */
-  align-items: center;  /* Centers child components horizontally */
-  overflow: auto;  /* Allows scrolling if content exceeds the wrapper */
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+}
+
+.wr-menu-container {
+  width: 100%;
+  padding: 1.5rem;
+}
+
+/* Date Navigation */
+.wr-date-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.wr-date-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2d3748;
+  margin: 0;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.wr-btn-primary {
+  padding: 0.5rem 1.25rem;
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: 200px;
+}
+
+.wr-btn-primary:hover {
+  background-color: #3182ce;
+  transform: translateY(-1px);
+}
+
+/* Meal Type Sections */
+.wr-meal-type-section {
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+.wr-meal-type-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 1rem 0;
+}
+
+.wr-meal-type-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.wr-empty-message {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+.wr-loading-message, .wr-error-message {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.125rem;
+}
+
+.wr-loading-message {
+  color: #3b82f6;
+}
+
+.wr-error-message {
+  color: #ef4444;
 }
 
 @media screen and (max-width: 768px) {
-  .title {
+  .wr-title {
     translate: -20px 0;
-    font-size: 1.5rem; /* Smaller font size for small screens */
+    font-size: 1.5rem;
   }
   
-  .uploader-wrapper {
-    margin-top: 90px; /* Reduced top margin for small screens */
+  .wr-uploader-wrapper {
+    margin-top: 90px;
+  }
+  
+  .wr-date-navigation {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .wr-date-title {
+    order: -1;
+    margin-bottom: 0.5rem;
+  }
+  
+  .wr-btn-primary {
+    min-width: 150px;
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Make menu card take full width */
+  .wr-meal-type-row {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Override MealMenuCard width in small screens */
+  .menu-item-card {
+    width: 100% !important;
+    max-width: 450px;
+    margin-bottom: 1rem;
   }
 }
+
+@media (max-width: 480px) {
+  .wr-menu-container {
+    padding: 1rem;
+  }
+  
+  .wr-date-title {
+    font-size: 1.1rem;
+  }
+  
+  /* Even smaller screens */
+  .menu-item-card {
+    max-width: 100%;
+  }
+}
+
