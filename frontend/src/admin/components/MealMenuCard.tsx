@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
 import "./MealMenuCard.css";
 
 interface MenuItemCardProps {
@@ -16,16 +15,21 @@ const MealMenuCard: React.FC<MenuItemCardProps & { mealType?: string }> = ({
   mealType,
 }) => {
   // Set text color class based on type
-  const typeColorClass = type.toLowerCase() == "veg" ? "veg-text" : "non-veg-text";
+  const typeColorClass =
+    type.toLowerCase() === "veg" ? "menu-item-veg" : "menu-item-nonveg";
 
   return (
     <div
-      className={`meal-card ${isFeast ? "feast-card" : ""}`}
+      className={`menu-item-card ${isFeast ? "menu-item-feast" : ""}`}
       data-meal-type={mealType}
     >
-      <h3 className="dish-name">{Dish_name}</h3>
-      <p className="veg-text">{type}</p>
-      {isFeast && <div className="feast-badge">Feast Special</div>}
+      <div className="menu-item-content">
+        <div className="menu-item-name-container">
+          <h3 className="menu-item-name">{Dish_name[0].toUpperCase() + Dish_name.slice(1).toLowerCase()}</h3>
+          <p className={`menu-item-type ${typeColorClass}`}>{type}</p>
+        </div>
+        {isFeast && <div className="menu-item-feast-badge">Feast Special</div>}
+      </div>
     </div>
   );
 };
