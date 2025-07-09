@@ -16,6 +16,7 @@ const EditMenu2 = () => {
 
   const [meals, setMeals] = useState<any[]>([]);
   const [filteredMeals, setFilteredMeals] = useState<any[]>([]);
+  const [menuItems, setMenuItems] = useState<any[]>([]);
 
   useEffect(() => {
     console.log("👀 useEffect triggered");
@@ -50,6 +51,31 @@ const EditMenu2 = () => {
     fetchMeals();
   }, []);
 
+  const fetchMenuItemsForMeals = async (mealIds: string[]) => {
+    console.log('🍽 Fetching menu items for meals:', mealIds);
+
+    const params = new URLSearchParams();
+    const ssid = sessionStorage.getItem('key');
+    params.append('queryId', 'GET_ALL');
+    params.append('session_id', ssid || '');
+
+    try {
+      const response = await fetch(`${apiConfig.getResourceUrl('menu_item')}?${params.toString()}`);
+      if (!response.ok) throw new Error(`❌ Failed to fetch menu items: ${response.status}`);
+      const data = await response.json();
+      const allMenuItems = data.resource || [];
+
+      const filteredItems = allMenuItems.filter((item: any) =>
+        mealIds.includes(item.Meal_id)
+      );
+
+      console.log(`✅ Filtered menu items: ${filteredItems.length}`);
+      setMenuItems(filteredItems);
+    } catch (err) {
+      console.error('❌ Error fetching menu items:', err);
+    }
+  };
+
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name as MealType;
     const checked = e.target.checked;
@@ -62,7 +88,7 @@ const EditMenu2 = () => {
     }));
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     console.log('🔍 Starting search...');
     console.log('📅 Selected date:', date);
     console.log('🍱 Selected meal types:', selectedTypes);
@@ -91,6 +117,9 @@ const EditMenu2 = () => {
 
     console.log('🎯 Final matched meals:', results);
     setFilteredMeals(results);
+
+    const mealIds = results.map(meal => meal.id);
+    await fetchMenuItemsForMeals(mealIds);
   };
 
   try {
@@ -132,12 +161,30 @@ const EditMenu2 = () => {
           <div>
             <h3>Matching Meals</h3>
             <ul>
-              {filteredMeals.map((meal, idx) => (
-                <li key={idx}>
-                  Meal ID: {meal.id} | Date: {new Date(meal.Date).toISOString().split('T')[0]} | Type: {meal.Meal_type}
-                  {meal.IsFeast && ` | IsFeast: ${meal.IsFeast}`}
-                </li>
-              ))}
+              {filteredMeals.map((meal, idx) => {
+                const items = menuItems.filter(item => item.Meal_id === meal.id);
+                return (
+                  <li key={idx}>
+                    <div>
+                      <strong>Meal ID:</strong> {meal.id} |
+                      <strong> Date:</strong> {new Date(meal.Date).toISOString().split('T')[0]} |
+                      <strong> Type:</strong> {meal.Meal_type}
+                      {meal.IsFeast && ` | IsFeast: ${meal.IsFeast}`}
+                    </div>
+                    {items.length > 0 ? (
+                      <ul>
+                        {items.map((item, i) => (
+                          <li key={i}>
+                            🍽 Dish: {item.Dish_name} | Type: {item.type}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>No dishes found for this meal.</p>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ) : (
