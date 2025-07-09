@@ -25,6 +25,7 @@ import AdminLayout from "./admin/layouts/AdminLayout";
 import UserFeedback from "./user/pages/UserFeedback";
 import Menu from "./user/pages/Menu";
 import WeekMenu from "./user/pages/WeekMenu";
+import SickMeals from "./admin/pages/SickMeals";
 
 function App() {
   return (
@@ -56,7 +57,9 @@ function App() {
         {/* <Route path='add-feast' element={<AddFeast />} /> */}
         <Route path='edit-menu' element={<EditMenu />} />
         <Route path='feedback' element={<Feedback />} />
+        <Route path='sick-meal' element={<SickMeals />} />
         <Route path='*' element={<Page404 />} />
+
       </Route>
     </Routes>
   );

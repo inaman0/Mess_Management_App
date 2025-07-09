@@ -1,5 +1,6 @@
 import React from "react";
 import "./MealMenuCard.css";
+import ReadReview from "../../components/Resource/ReadReview";
 
 interface MenuItemCardProps {
   Dish_name: string;
@@ -30,6 +31,7 @@ const MealMenuCard: React.FC<MenuItemCardProps & { mealType?: string }> = ({
         </div>
         {isFeast && <div className="menu-item-feast-badge">Feast Special</div>}
       </div>
+      
     </div>
   );
 };

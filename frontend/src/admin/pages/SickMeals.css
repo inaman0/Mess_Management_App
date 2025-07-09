@@ -1,0 +1,39 @@
+.title {
+  z-index: 10;
+  position: absolute;
+  top: 45px;
+  left: 120px;
+  font-size: 2rem;
+  /* font-weight: bold; */
+  color: #ffffff; /* Dark gray for better contrast */
+}
+
+
+.wrapper {
+  max-width: 85%;  /* Increased from 42rem to cover more of the page width */
+  min-height: 80vh;  /* Makes it cover most of the viewport height */
+  margin: 0 auto;
+  margin-bottom: 50px;
+  padding: 1rem;
+  margin-top: 100px;  /* Reduced from 50px to position it higher */
+  background-color: rgba(255, 255, 255, 0.9);;  /* Light gray background */
+  border-radius: 0.75rem;     /* Rounded corners for the wrapper */
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  position: relative;  /* Establishes positioning context for child elements */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* Centers child components vertically */
+  align-items: center;  /* Centers child components horizontally */
+  overflow: auto;  /* Allows scrolling if content exceeds the wrapper */
+}
+
+@media screen and (max-width: 768px) {
+  .title {
+    translate: -20px 0;
+    font-size: 1.5rem; /* Smaller font size for small screens */
+  }
+  
+  .wrapper {
+    margin-top: 90px; /* Reduced top margin for small screens */
+  }
+}

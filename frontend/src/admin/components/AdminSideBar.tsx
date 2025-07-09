@@ -71,6 +71,14 @@ const AdminSidebar = () => {
           >
             Feedback
           </NavLink>
+
+           <NavLink
+            to="/admin/sick-meal"
+            className="nav-link"
+            onClick={toggleSidebar}
+          >
+            Sick Meals
+          </NavLink>
         </nav>
       </div>
 
