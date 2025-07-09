@@ -1,0 +1,108 @@
+.sickmeal-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.sickmeal-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns */
+  gap: 1.2rem;
+  justify-items: center;
+  align-items: start;
+}
+
+.sickmeal-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.2rem;
+  width: 100%;
+  max-width: 250px;
+  height: 450px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sickmeal-item {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.sickmeal-field {
+  flex: 1;
+  overflow: hidden;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.sickmeal-description {
+  height: 60px; /* fixed height */
+  overflow-y: auto;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  padding-right: 4px;
+  margin-bottom: 20px;
+}
+
+.sickmeal-text-scroll {
+  height: 60px; /* fixed height */
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-top: 4px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.sickmeal-text-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sickmeal-text-scroll::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.sickmeal-text-scroll::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pagination-button {
+  background-color: #0d6efd;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  min-width: 100px;
+  text-align: center;
+}
+
+.pagination-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.page-count {
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .sickmeal-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .sickmeal-card {
+    max-width: 90%;
+    height: auto;
+  }
+}
