@@ -217,3 +217,10 @@
   min-height: 42px;
   width: 100%;
 }
+
+.menu-item-rating {
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 0.5rem;
+  color: #666;
+}

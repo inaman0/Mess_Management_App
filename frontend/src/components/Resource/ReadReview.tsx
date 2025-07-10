@@ -1,77 +1,71 @@
-import React, { useState } from 'react';
-                  import { useEffect } from 'react';
-                  import apiConfig from '../../config/apiConfig';
-                   import {
-              AllCommunityModule,
-              ModuleRegistry,
-              themeAlpine,
-              themeBalham,
-            } from "ag-grid-community";
-            import { AgGridReact } from "ag-grid-react";
-            
-            ModuleRegistry.registerModules([AllCommunityModule]);
-                  export type ResourceMetaData = {
-                    "resource": string,
-                    "fieldValues":any[]
-                  }
-  
-                  const ReadReview= () => {
-    const [rowData, setRowData] = useState<any[]>([]);
-    const [colDef1, setColDef1] = useState<any[]>([]);
-    const [resMetaData, setResMetaData] = useState<ResourceMetaData[]>([]);
+import React, { useState, useEffect } from "react";
+import apiConfig from "../../config/apiConfig";
+import {
+  AllCommunityModule,
+  ModuleRegistry,
+} from "ag-grid-community";
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
+
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+export type ResourceMetaData = {
+  resource: string;
+  fieldValues: any[];
+};
+
+interface ReadReviewProps {
+  setRatings: (ratings: any[]) => void;
+}
+
+const ReadReview: React.FC<ReadReviewProps> = ({ setRatings }) => {
+  const [rowData, setRowData] = useState<any[]>([]);
+  const [colDef1, setColDef1] = useState<any[]>([]);
+  const [resMetaData, setResMetaData] = useState<ResourceMetaData[]>([]);
   const [fields, setFields] = useState<any[]>([]);
-  const [dataToSave, setDataToSave] = useState<any>({});
   const [requiredFields, setRequiredFields] = useState<string[]>([]);
   const [fetchData, setFetchedData] = useState<any[]>([]);
-   const [showToast,setShowToast] = useState<any>(false);
+  const [showToast, setShowToast] = useState(false);
 
   const regex = /^(g_|archived|extra_data)/;
-  const apiUrl = `${apiConfig.getResourceUrl('review')}?`
-  const metadataUrl = `${apiConfig.getResourceMetaDataUrl('Review')}?`
-  const BaseUrl = '${apiConfig.API_BASE_URL}';
-  // Fetch resource data
+  const apiUrl = `${apiConfig.getResourceUrl("review")}?`;
+  const metadataUrl = `${apiConfig.getResourceMetaDataUrl("Review")}?`;
+
   useEffect(() => {
     const fetchResourceData = async () => {
-      console.log('Fetching data...');
+      console.log("Fetching data...");
       const params = new URLSearchParams();
-      const ssid: any = sessionStorage.getItem('key');
-      const queryId: any = 'GET_ALL';
-      params.append('queryId', queryId);
-      params.append('session_id', ssid);
+      const ssid: any = sessionStorage.getItem("key");
+      const queryId: any = "GET_ALL";
+      params.append("queryId", queryId);
+      params.append("session_id", ssid);
       try {
-        const response = await fetch(
-          apiUrl+params.toString(),
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error('Error:'+ response.status);
-        }
+        const response = await fetch(apiUrl + params.toString(), {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) throw new Error("Error: " + response.status);
         const data = await response.json();
-        console.log('Data after fetching', data);
+        console.log("Data after fetching", data);
         setFetchedData(data.resource || []);
+        setRatings(data.resource || []); // 🔁 propagate to parent
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
     fetchResourceData();
   }, []);
 
-  // Fetch metadata
   useEffect(() => {
     const fetchResMetaData = async () => {
       try {
-        const response = await fetch(
-          metadataUrl,
-          {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
+        const response = await fetch(metadataUrl, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
         if (response.ok) {
           const metaData = await response.json();
           setResMetaData(metaData);
@@ -81,28 +75,28 @@ import React, { useState } from 'react';
             .map((field: any) => field.name);
           setRequiredFields(required || []);
         } else {
-          console.error('Failed to fetch metadata:'+ response.statusText);
+          console.error("Failed to fetch metadata:" + response.statusText);
         }
       } catch (error) {
-        console.error('Error fetching metadata:', error);
+        console.error("Error fetching metadata:", error);
       }
     };
     fetchResMetaData();
   }, []);
+
   useEffect(() => {
-    
     const data = fetchData || [];
-    const fields = requiredFields.filter(field => field !== 'id') || [];
-    
-    const columns = fields.map(field => ({
+    const fields = requiredFields.filter((field) => field !== "id") || [];
+
+    const columns = fields.map((field) => ({
       field: field,
       headerName: field,
       editable: false,
       resizable: true,
       sortable: true,
-      filter: true
+      filter: true,
     }));
-    
+
     setColDef1(columns);
     setRowData(data);
   }, [fetchData, requiredFields]);
@@ -111,34 +105,33 @@ import React, { useState } from 'react';
     flex: 1,
     minWidth: 100,
     editable: false,
-  }; 
+  };
 
   return (
     <div>
-        <div>
-         <h2> ReadReview </h2>
-        </div>
+      <div>
+        <h2> ReadReview </h2>
+      </div>
 
+      <div>
+        {rowData.length === 0 && colDef1.length === 0 ? (
+          <div>No data available. Please add a resource attribute.</div>
+        ) : (
+          <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
+            <AgGridReact
+              rowData={rowData}
+              columnDefs={colDef1}
+              defaultColDef={defaultColDef}
+              pagination={true}
+              paginationPageSize={10}
+              animateRows={true}
+              rowSelection="multiple"
+            />
+          </div>
+        )}
+      </div>
 
-
-<div >
-    {rowData.length === 0 && colDef1.length === 0 ? (
-      <div>No data available. Please add a resource attribute.</div>
-    ) : (
-      <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
-      <AgGridReact
-        rowData={rowData}
-        columnDefs={colDef1}
-        defaultColDef={defaultColDef}
-        pagination={true}
-        paginationPageSize={10}
-        animateRows={true}
-        rowSelection="multiple"
-      />
-    </div>
-    )}
-    </div>
-    {showToast && (
+      {showToast && (
         <div
           className="toast-container position-fixed top-20 start-50 translate-middle p-3"
           style={{ zIndex: 1550 }}
@@ -157,12 +150,9 @@ import React, { useState } from 'react';
             <div className="toast-body text-success text-center">Created successfully!</div>
           </div>
         </div>
-    ) }
-    
+      )}
     </div>
-    )
-    
-    
-    };
-    
-    export default ReadReview
+  );
+};
+
+export default ReadReview;

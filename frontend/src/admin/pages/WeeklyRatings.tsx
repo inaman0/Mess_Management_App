@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import apiConfig from "../../config/apiConfig";
 import MealMenuCard from "../components/MealMenuCard";
 import "./WeeklyRatings.css";
+import ReadReview from "../../components/Resource/ReadReview";
 
 interface MenuItem {
   Dish_name: string;
@@ -16,12 +17,19 @@ interface MealData {
   Date: Date;
 }
 
+interface Rating {
+  Menu_item_id: string;
+  Ratings: number | string;
+  [key: string]: any;
+}
+
 const WeeklyRatings = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [meals, setMeals] = useState<MealData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [ratings, setRatings] = useState<Rating[]>([]); // 🔁 ratings managed here
 
   const apiUrl = `${apiConfig.getResourceUrl("menu_item")}?`;
   const apiMealUrl = `${apiConfig.getResourceUrl("meal")}?`;
@@ -91,12 +99,10 @@ const WeeklyRatings = () => {
     });
   };
 
-  // Filter meals for the current date
   const currentDayMeals = meals.filter(
     (meal) => meal.Date && isSameDate(meal.Date, currentDate)
   );
 
-  // Create map of meal_id to meal_type
   const mealTypeMap = currentDayMeals.reduce<Record<string, string>>(
     (acc, meal) => {
       acc[meal.id] = meal.Meal_type;
@@ -105,12 +111,10 @@ const WeeklyRatings = () => {
     {}
   );
 
-  // Filter menu items to only include those with meal IDs from current day's meals
   const currentDayMenuItems = menuItems.filter((item) =>
     currentDayMeals.some((meal) => meal.id === item.Meal_id)
   );
 
-  // Group menu items by meal type
   const groupedMenu = currentDayMenuItems.reduce<Record<string, MenuItem[]>>(
     (acc, item) => {
       const mealType = mealTypeMap[item.Meal_id] || "Other";
@@ -121,7 +125,6 @@ const WeeklyRatings = () => {
     {}
   );
 
-  // Define the order of meal types for consistent display
   const mealTypeOrder = ["Breakfast", "Lunch", "Snacks", "Dinner", "Other"];
 
   if (isLoading)
@@ -132,6 +135,7 @@ const WeeklyRatings = () => {
     <>
       <h1 className="wr-title">Ratings</h1>
       <div className="wr-uploader-wrapper">
+        <ReadReview setRatings={setRatings} />
         <div className="wr-menu-container">
           <div className="wr-date-navigation">
             <button onClick={() => changeDate(-1)} className="wr-btn-primary">
@@ -164,8 +168,9 @@ const WeeklyRatings = () => {
                         Dish_name={item.Dish_name}
                         type={item.type}
                         id={item.id}
-                        isFeast={false} // Set isFeast to false or determine based on your data
+                        isFeast={false}
                         mealType={mealType}
+                        ratings={ratings}
                       />
                     ))}
                   </div>

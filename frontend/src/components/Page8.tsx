@@ -14,7 +14,7 @@
           return (
             <>
             <div className="d-flex flex-column border border-2 h-50" id="id-17"><CreateReview/></div>
-            <div className="d-flex flex-column border border-2 h-50" id="id-19"><ReadReview/></div>
+            {/* <div className="d-flex flex-column border border-2 h-50" id="id-19"><ReadReview/></div> */}
             <div className="d-flex flex-column border border-2 h-50" id="id-1B"><UpdateReview/></div>
             </>
           );

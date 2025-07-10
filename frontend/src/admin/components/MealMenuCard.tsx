@@ -7,17 +7,46 @@ interface MenuItemCardProps {
   id: string;
   isFeast: boolean;
   mealType?: string;
+  ratings: {
+    Menu_item_id: string;
+    Ratings: number | string;
+    [key: string]: any;
+  }[];
 }
 
 const MealMenuCard: React.FC<MenuItemCardProps> = ({
   Dish_name,
   type,
+  id,
   isFeast,
   mealType,
+  ratings,
 }) => {
   const typeColorClass =
     type.toLowerCase() === "veg" ? "menu-item-veg" : "menu-item-nonveg";
 
+  // Find all ratings for this menu item
+  const itemRatings = ratings.filter((r) => r.Menu_item_id === id);
+
+  // Calculate average rating
+  const avgRating =
+    itemRatings.length > 0
+      ? (
+          itemRatings.reduce((sum, r) => sum + Number(r.Ratings), 0) /
+          itemRatings.length
+        ).toFixed(1)
+      : "No";
+
+  // Get total number of ratings
+  const totalRatings = itemRatings.length;
+
+  // Format the rating display
+  const ratingDisplay =
+    totalRatings > 0
+      ? `${avgRating} ⭐ (${totalRatings} rating${
+          totalRatings !== 1 ? "s" : ""
+        })`
+      : "No ratings yet";
 
   return (
     <div
@@ -25,7 +54,6 @@ const MealMenuCard: React.FC<MenuItemCardProps> = ({
       data-meal-type={mealType}
     >
       <div className="menu-item-content">
-        {/* {console.log("MealMenuCard props:", { id, Dish_name, ratings })} */}
         <div className="menu-item-name-container">
           <div className="menu-item-name-wrapper">
             <h3 className="menu-item-name">
@@ -35,19 +63,11 @@ const MealMenuCard: React.FC<MenuItemCardProps> = ({
           <p className={`menu-item-type ${typeColorClass}`}>{type}</p>
 
           <div className="menu-item-bottom">
-            {/* <p className="menu-item-rating">
-              {relevantRatings.length === 0
-                ? "No ratings yet"
-                : `${averageRating} ⭐ (${relevantRatings.length} rating${
-                    relevantRatings.length > 1 ? "s" : ""
-                  })`}
-            </p> */}
+            <p className="menu-item-rating">{ratingDisplay}</p>
           </div>
         </div>
 
-        {isFeast && (
-          <div className="menu-item-feast-badge">Feast Special</div>
-        )}
+        {isFeast && <div className="menu-item-feast-badge">Feast Special</div>}
       </div>
     </div>
   );
