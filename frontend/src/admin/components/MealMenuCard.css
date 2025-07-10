@@ -1,7 +1,7 @@
 /* Base Card Styles */
 .menu-item-card {
   width: 220px;
-  height: 150px;
+  height: 160px;
   padding: 1rem;
   border-radius: 8px;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
@@ -195,4 +195,25 @@
   .menu-item-type {
     font-size: 0.65rem;
   }
+}
+
+.menu-item-rating {
+  font-size: 1rem;
+  color: rgba(6, 5, 5, 0.449);
+  margin-top: 0.25rem;
+  font-weight: bold;
+}
+
+.menu-item-bottom {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.menu-item-name-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 42px;
+  width: 100%;
 }
