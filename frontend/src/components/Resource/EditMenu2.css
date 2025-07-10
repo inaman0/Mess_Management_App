@@ -185,3 +185,9 @@
     text-align: center;
   }
 }
+
+.Toastify__close-button:hover {
+  background: none !important;
+  opacity: 1 !important;
+  color: inherit !important;
+}

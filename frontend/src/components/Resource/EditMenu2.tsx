@@ -8,13 +8,7 @@ type MealType = 'Breakfast' | 'Lunch' | 'Snacks' | 'Dinner';
 
 const EditMenu2 = () => {
   const [date, setDate] = useState('');
-  const [selectedTypes, setSelectedTypes] = useState<Record<MealType, boolean>>({
-    Breakfast: false,
-    Lunch: false,
-    Snacks: false,
-    Dinner: false,
-  });
-
+  const [selectedType, setSelectedType] = useState<MealType | ''>('');
   const [meals, setMeals] = useState<any[]>([]);
   const [filteredMeals, setFilteredMeals] = useState<any[]>([]);
   const [menuItems, setMenuItems] = useState<any[]>([]);
@@ -34,12 +28,12 @@ const EditMenu2 = () => {
 
       try {
         const response = await fetch(`${apiConfig.getResourceUrl('meal')}?${params.toString()}`);
-        if (!response.ok) throw new Error(`❌ Failed to fetch meals: ${response.status}`);
+        if (!response.ok) throw new Error(`Failed to fetch meals: ${response.status}`);
         const data = await response.json();
         const fetchedMeals = data.resource || [];
         setMeals(fetchedMeals);
       } catch (err) {
-        console.error('❌ Error fetching meals:', err);
+        console.error('Error fetching meals:', err);
       }
     };
 
@@ -54,7 +48,7 @@ const EditMenu2 = () => {
 
     try {
       const response = await fetch(`${apiConfig.getResourceUrl('menu_item')}?${params.toString()}`);
-      if (!response.ok) throw new Error(`❌ Failed to fetch menu items: ${response.status}`);
+      if (!response.ok) throw new Error(`Failed to fetch menu items: ${response.status}`);
       const data = await response.json();
       const allMenuItems = data.resource || [];
 
@@ -64,18 +58,8 @@ const EditMenu2 = () => {
 
       setMenuItems(filteredItems);
     } catch (err) {
-      console.error('❌ Error fetching menu items:', err);
+      console.error('Error fetching menu items:', err);
     }
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name as MealType;
-    const checked = e.target.checked;
-
-    setSelectedTypes(prev => ({
-      ...prev,
-      [name]: checked,
-    }));
   };
 
   const handleInputChange = (id: string, field: string, value: string) => {
@@ -119,7 +103,7 @@ const EditMenu2 = () => {
       });
 
       if (response.ok) {
-        toast.success('✅ Item updated successfully!');
+        toast.success('Item updated successfully!');
 
         setMenuItems(prev =>
           prev.map(item =>
@@ -133,26 +117,23 @@ const EditMenu2 = () => {
           return updated;
         });
       } else {
-        toast.error('❌ Update failed.');
+        toast.error('Update failed.');
       }
     } catch (err) {
-      console.error('❌ Error updating item:', err);
-      toast.error('❌ Error occurred while updating.');
+      console.error('Error updating item:', err);
+      toast.error('Error occurred while updating.');
     }
   };
 
   const handleSearch = async () => {
-    const activeTypes: MealType[] = Object.keys(selectedTypes)
-      .filter((key) => selectedTypes[key as MealType]) as MealType[];
-
-    if (!date || activeTypes.length === 0) {
-      toast.warning('Please select a date and at least one meal type');
+    if (!date || !selectedType) {
+      toast.warning('Please select a date and a meal type');
       return;
     }
 
     const results = meals.filter(meal => {
       const mealDate = new Date(meal.Date).toLocaleDateString('en-CA');
-      return mealDate === date && activeTypes.includes(meal.Meal_type);
+      return mealDate === date && meal.Meal_type === selectedType;
     });
 
     setFilteredMeals(results);
@@ -163,8 +144,18 @@ const EditMenu2 = () => {
 
   return (
     <div className="edit-menu2-container">
-      <ToastContainer />
-      <h2>Search Meals by Date and Type</h2>
+      <ToastContainer
+        closeOnClick
+        pauseOnHover
+        draggable
+        closeButton
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        toastClassName="custom-toast"
+      />
+
+      <h2>Enter Date and Meal Type</h2>
 
       <div className="edit-menu2-controls">
         <label>Date: </label>
@@ -179,10 +170,11 @@ const EditMenu2 = () => {
         {(['Breakfast', 'Lunch', 'Snacks', 'Dinner'] as MealType[]).map((type) => (
           <label key={type}>
             <input
-              type="checkbox"
-              name={type}
-              checked={selectedTypes[type]}
-              onChange={handleCheckboxChange}
+              type="radio"
+              name="mealType"
+              value={type}
+              checked={selectedType === type}
+              onChange={() => setSelectedType(type)}
             />{' '}
             {type}
           </label>
