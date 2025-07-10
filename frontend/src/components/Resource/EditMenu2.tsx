@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import apiConfig from '../../config/apiConfig';
+import './EditMenu2.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type MealType = 'Breakfast' | 'Lunch' | 'Snacks' | 'Dinner';
 
 const EditMenu2 = () => {
-  const navigate = useNavigate();
-
   const [date, setDate] = useState('');
   const [selectedTypes, setSelectedTypes] = useState<Record<MealType, boolean>>({
     Breakfast: false,
@@ -19,14 +19,9 @@ const EditMenu2 = () => {
   const [filteredMeals, setFilteredMeals] = useState<any[]>([]);
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [currentUrl, setCurrentUrl] = useState('');
+  const [editedItems, setEditedItems] = useState<Record<string, any>>({});
 
   const menuItemApiUrl = apiConfig.getResourceUrl('menu_item') + '?';
-  const menuItemMetaUrl = apiConfig.getResourceMetaDataUrl('MenuItem') + '?';
-
-  const mealApiUrl = apiConfig.getResourceUrl('meal') + '?';
-  const mealMetaUrl = apiConfig.getResourceMetaDataUrl('Meal') + '?';
-
-  const BaseUrl = apiConfig.API_BASE_URL;
 
   useEffect(() => {
     setCurrentUrl(window.location.href);
@@ -83,25 +78,67 @@ const EditMenu2 = () => {
     }));
   };
 
-  const handleUpdate = (id: string, type: 'Meal' | 'Menu_item') => {
-    const editedData: any = {};
-    const dataSource = type === 'Meal' ? filteredMeals : menuItems;
-
-    dataSource.forEach(item => {
-      editedData[item.id] = { ...item };
-    });
-
-    navigate('/edit', {
-      state: {
-        id,
-        editedData,
-        resourceName: type,
-        currUrl: currentUrl,
-        apiUrl: type === 'Meal' ? mealApiUrl : menuItemApiUrl,
-        metadataUrl: type === 'Meal' ? mealMetaUrl : menuItemMetaUrl,
-        BaseUrl,
+  const handleInputChange = (id: string, field: string, value: string) => {
+    setEditedItems(prev => ({
+      ...prev,
+      [id]: {
+        ...(prev[id] || {}),
+        [field]: value
       }
-    });
+    }));
+  };
+
+  const handleSaveItem = async (itemId: string) => {
+    const updated = editedItems[itemId];
+    const fullItem = menuItems.find(item => item.id === itemId);
+
+    if (!fullItem) return;
+
+    const updatedItem = {
+      ...fullItem,
+      ...updated
+    };
+
+    const jsonString = JSON.stringify(updatedItem);
+    const uint8Array = new TextEncoder().encode(jsonString);
+    const base64Encoded = btoa(String.fromCharCode(...uint8Array));
+
+    const params = new URLSearchParams();
+    const ssid = sessionStorage.getItem('key');
+    params.append('resource', base64Encoded);
+    params.append('action', 'MODIFY');
+    params.append('session_id', ssid || '');
+
+    try {
+      const response = await fetch(menuItemApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params.toString()
+      });
+
+      if (response.ok) {
+        toast.success('✅ Item updated successfully!');
+
+        setMenuItems(prev =>
+          prev.map(item =>
+            item.id === itemId ? { ...item, ...updated } : item
+          )
+        );
+
+        setEditedItems(prev => {
+          const updated = { ...prev };
+          delete updated[itemId];
+          return updated;
+        });
+      } else {
+        toast.error('❌ Update failed.');
+      }
+    } catch (err) {
+      console.error('❌ Error updating item:', err);
+      toast.error('❌ Error occurred while updating.');
+    }
   };
 
   const handleSearch = async () => {
@@ -109,7 +146,7 @@ const EditMenu2 = () => {
       .filter((key) => selectedTypes[key as MealType]) as MealType[];
 
     if (!date || activeTypes.length === 0) {
-      alert('Please select a date and at least one meal type');
+      toast.warning('Please select a date and at least one meal type');
       return;
     }
 
@@ -125,10 +162,11 @@ const EditMenu2 = () => {
   };
 
   return (
-    <div>
+    <div className="edit-menu2-container">
+      <ToastContainer />
       <h2>Search Meals by Date and Type</h2>
 
-      <div>
+      <div className="edit-menu2-controls">
         <label>Date: </label>
         <input
           type="date"
@@ -137,9 +175,9 @@ const EditMenu2 = () => {
         />
       </div>
 
-      <div>
+      <div className="edit-menu2-meal-types">
         {(['Breakfast', 'Lunch', 'Snacks', 'Dinner'] as MealType[]).map((type) => (
-          <label key={type} style={{ marginRight: '10px' }}>
+          <label key={type}>
             <input
               type="checkbox"
               name={type}
@@ -151,40 +189,39 @@ const EditMenu2 = () => {
         ))}
       </div>
 
-      <button onClick={handleSearch}>Search</button>
+      <button onClick={handleSearch} className='edit-menu2-container-search'>Search</button>
 
       <hr />
 
       {filteredMeals.length > 0 ? (
-        <div>
+        <div className="edit-menu2-results">
           <h3>Matching Meals</h3>
           <ul>
             {filteredMeals.map((meal, idx) => {
               const items = menuItems.filter(item => item.Meal_id === meal.id);
               return (
                 <li key={idx}>
-                  <div>
-                    <strong>Meal ID:</strong> {meal.id} |
-                    <strong> Date:</strong> {new Date(meal.Date).toISOString().split('T')[0]} |
-                    <strong> Type:</strong> {meal.Meal_type}
-                    <button
-                      style={{ marginLeft: '10px' }}
-                      onClick={() => handleUpdate(meal.id, 'Meal')}
-                    >
-                      Edit Meal
-                    </button>
-                  </div>
                   {items.length > 0 ? (
                     <ul>
                       {items.map((item, i) => (
                         <li key={i}>
-                          🍽 Dish: {item.Dish_name} | Type: {item.type}
-                          <button
-                            style={{ marginLeft: '10px' }}
-                            onClick={() => handleUpdate(item.id, 'Menu_item')}
-                          >
-                            Edit Dish
-                          </button>
+                          <div className="edit-menu2-dish-row">
+                            <input
+                              type="text"
+                              value={editedItems[item.id]?.Dish_name ?? item.Dish_name}
+                              onChange={e => handleInputChange(item.id, 'Dish_name', e.target.value)}
+                            />
+                            <input
+                              type="text"
+                              value={editedItems[item.id]?.type ?? item.type}
+                              onChange={e => handleInputChange(item.id, 'type', e.target.value)}
+                            />
+                            <button
+                              onClick={() => handleSaveItem(item.id)} className='edit-menu2-edit-button'
+                            >
+                              Save
+                            </button>
+                          </div>
                         </li>
                       ))}
                     </ul>

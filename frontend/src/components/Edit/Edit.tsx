@@ -191,7 +191,7 @@ const Edit = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 bg-color-black">
       {fields.map((field, index) => {
         if (field.name !== "id" && !regex.test(field.name)) {
           if (field.foreign) {
