@@ -14,6 +14,7 @@ const EditMenu2 = () => {
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [currentUrl, setCurrentUrl] = useState('');
   const [editedItems, setEditedItems] = useState<Record<string, any>>({});
+  const [newItems, setNewItems] = useState<Record<string, { Dish_name: string; type: string }>>({});
 
   const menuItemApiUrl = apiConfig.getResourceUrl('menu_item') + '?';
 
@@ -72,6 +73,16 @@ const EditMenu2 = () => {
     }));
   };
 
+  const handleNewItemChange = (mealId: string, field: string, value: string) => {
+    setNewItems(prev => ({
+      ...prev,
+      [mealId]: {
+        ...(prev[mealId] || { Dish_name: '', type: '' }),
+        [field]: value
+      }
+    }));
+  };
+
   const handleSaveItem = async (itemId: string) => {
     const updated = editedItems[itemId];
     const fullItem = menuItems.find(item => item.id === itemId);
@@ -104,13 +115,11 @@ const EditMenu2 = () => {
 
       if (response.ok) {
         toast.success('Item updated successfully!');
-
         setMenuItems(prev =>
           prev.map(item =>
             item.id === itemId ? { ...item, ...updated } : item
           )
         );
-
         setEditedItems(prev => {
           const updated = { ...prev };
           delete updated[itemId];
@@ -122,6 +131,44 @@ const EditMenu2 = () => {
     } catch (err) {
       console.error('Error updating item:', err);
       toast.error('Error occurred while updating.');
+    }
+  };
+
+  const handleCreateNewItem = async (mealId: string) => {
+    const newItem = newItems[mealId];
+    if (!newItem || !newItem.Dish_name || !newItem.type) return;
+
+    const itemToCreate = {
+      ...newItem,
+      Meal_id: mealId
+    };
+
+    const jsonString = JSON.stringify(itemToCreate);
+    const base64Encoded = btoa(jsonString);
+
+    const params = new URLSearchParams();
+    const ssid = sessionStorage.getItem('key');
+    params.append('resource', base64Encoded);
+    params.append('session_id', ssid || '');
+
+    try {
+      const response = await fetch(menuItemApiUrl + params.toString(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+
+      if (response.ok) {
+        toast.success('New item created successfully!');
+        setNewItems(prev => ({ ...prev, [mealId]: { Dish_name: '', type: '' } }));
+        handleSearch();
+      } else {
+        toast.error('Failed to create new item.');
+      }
+    } catch (err) {
+      console.error('Error creating new item:', err);
+      toast.error('Error occurred while creating item.');
     }
   };
 
@@ -220,6 +267,23 @@ const EditMenu2 = () => {
                   ) : (
                     <p>No dishes found for this meal.</p>
                   )}
+
+                  {/* Add new item creation UI */}
+                  <div className="edit-menu2-dish-row">
+                    <input
+                      type="text"
+                      placeholder="New Dish Name"
+                      value={newItems[meal.id]?.Dish_name || ''}
+                      onChange={e => handleNewItemChange(meal.id, 'Dish_name', e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      placeholder="New Type"
+                      value={newItems[meal.id]?.type || ''}
+                      onChange={e => handleNewItemChange(meal.id, 'type', e.target.value)}
+                    />
+                    <button onClick={() => handleCreateNewItem(meal.id)} className='edit-menu2-edit-button'>Add</button>
+                  </div>
                 </li>
               );
             })}

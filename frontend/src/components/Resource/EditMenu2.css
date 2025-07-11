@@ -1,12 +1,23 @@
+/* Global Reset */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 /* Root container */
 .edit-menu2-container {
+  width: 100%;
   max-width: 1000px;
   margin: 3rem auto;
-  padding: 4rem 3rem;
-  /* background-color: #fdfdfd; */
-  /* border-radius: 16px; */
-  /* box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); */
+  padding: 4rem 1.5rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Heading */
@@ -39,6 +50,7 @@
   font-size: 1rem;
 }
 
+/* Meal type radio buttons */
 .edit-menu2-meal-types {
   display: flex;
   flex-wrap: wrap;
@@ -65,7 +77,7 @@
   margin-top: 1rem;
 }
 
-.edit-menu2-container button:hover {
+.edit-menu2-container-search:hover {
   background-color: #004acc;
 }
 
@@ -94,47 +106,41 @@
 
 .edit-menu2-results li ul {
   margin-top: 0.5rem;
-  /* padding-left: 1.2rem; */
 }
 
-.edit-menu2-results strong {
-  font-weight: 600;
-  color: #333;
-}
+/* Dish row */
 .edit-menu2-dish-row {
   display: flex;
-  align-items: center; /* Center vertically */
+  align-items: center;
   justify-content: center;
   gap: 1rem;
   padding: 0.75rem 1rem;
-  /* background-color: #fefefe; */
-  /* border: 1px solid #ddd; */
   border-radius: 10px;
   margin-bottom: 0.8rem;
+  flex-wrap: wrap;
 }
 
-/* Input Styling */
+/* Inputs */
 .edit-menu2-dish-row input {
   flex: 1;
+  min-width: 120px;
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
-  height: 42px; /* 👈 force consistent height */
+  height: 42px;
   box-sizing: border-box;
 }
 
-/* Save button Styling */
-
+/* Save button */
 .edit-menu2-edit-button {
-  height: 42px; /* 👈 match input height */
+  height: 42px;
   padding: 0 1.2rem;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
   background-color: #0066ff;
   color: white;
-  /* cursor: pointer; */
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -145,15 +151,27 @@
 .edit-menu2-edit-button:hover {
   background-color: #218838;
 }
-/* Empty state */
+
+/* Empty state text */
 .edit-menu2-container p {
   text-align: center;
   color: #999;
   font-style: italic;
 }
 
-/* Responsive behavior */
+/* Toastify */
+.Toastify__close-button:hover {
+  background: none !important;
+  opacity: 1 !important;
+  color: inherit !important;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
+  .edit-menu2-container {
+    padding: 1.5rem 1rem;
+  }
+
   .edit-menu2-controls {
     flex-direction: column;
     align-items: stretch;
@@ -163,20 +181,16 @@
     justify-content: flex-start;
   }
 
-  .edit-menu2-container {
-    padding: 1.5rem 1rem;
-  }
-
   .edit-menu2-results li {
     font-size: 0.95rem;
   }
 
   .edit-menu2-dish-row {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
-  .edit-menu2-dish-input {
+  .edit-menu2-dish-row input {
     width: 100%;
   }
 
@@ -184,10 +198,4 @@
     width: 100%;
     text-align: center;
   }
-}
-
-.Toastify__close-button:hover {
-  background: none !important;
-  opacity: 1 !important;
-  color: inherit !important;
 }
