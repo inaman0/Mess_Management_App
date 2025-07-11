@@ -12,15 +12,14 @@ const EditMenu2 = () => {
   const [meals, setMeals] = useState<any[]>([]);
   const [filteredMeals, setFilteredMeals] = useState<any[]>([]);
   const [menuItems, setMenuItems] = useState<any[]>([]);
-  const [currentUrl, setCurrentUrl] = useState('');
   const [editedItems, setEditedItems] = useState<Record<string, any>>({});
   const [newItems, setNewItems] = useState<Record<string, { Dish_name: string; type: string }>>({});
+  const [editedFeastStatus, setEditedFeastStatus] = useState<Record<string, boolean>>({});
 
   const menuItemApiUrl = apiConfig.getResourceUrl('menu_item') + '?';
+  const mealApiUrl = apiConfig.getResourceUrl('meal') + '?';
 
   useEffect(() => {
-    setCurrentUrl(window.location.href);
-
     const fetchMeals = async () => {
       const params = new URLSearchParams();
       const ssid = sessionStorage.getItem('key');
@@ -28,7 +27,7 @@ const EditMenu2 = () => {
       params.append('session_id', ssid || '');
 
       try {
-        const response = await fetch(`${apiConfig.getResourceUrl('meal')}?${params.toString()}`);
+        const response = await fetch(`${mealApiUrl}${params.toString()}`);
         if (!response.ok) throw new Error(`Failed to fetch meals: ${response.status}`);
         const data = await response.json();
         const fetchedMeals = data.resource || [];
@@ -48,7 +47,7 @@ const EditMenu2 = () => {
     params.append('session_id', ssid || '');
 
     try {
-      const response = await fetch(`${apiConfig.getResourceUrl('menu_item')}?${params.toString()}`);
+      const response = await fetch(`${menuItemApiUrl}${params.toString()}`);
       if (!response.ok) throw new Error(`Failed to fetch menu items: ${response.status}`);
       const data = await response.json();
       const allMenuItems = data.resource || [];
@@ -81,6 +80,55 @@ const EditMenu2 = () => {
         [field]: value
       }
     }));
+  };
+
+  const handleFeastToggle = (mealId: string, value: boolean) => {
+    setEditedFeastStatus(prev => ({
+      ...prev,
+      [mealId]: value
+    }));
+  };
+
+  const handleSaveFeast = async (mealId: string) => {
+    const meal = meals.find(m => m.id === mealId);
+    if (!meal) return;
+
+    const updatedMeal = {
+      ...meal,
+      IsFeast: 'true'
+    };
+
+    const jsonString = JSON.stringify(updatedMeal);
+    const uint8Array = new TextEncoder().encode(jsonString);
+    const base64Encoded = btoa(String.fromCharCode(...uint8Array));
+
+    const params = new URLSearchParams();
+    const ssid = sessionStorage.getItem('key');
+    params.append('resource', base64Encoded);
+    params.append('action', 'MODIFY');
+    params.append('session_id', ssid || '');
+
+    try {
+      const response = await fetch(mealApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params.toString()
+      });
+
+      if (response.ok) {
+        toast.success('Meal updated successfully!');
+        setMeals(prev =>
+          prev.map(meal => meal.id === mealId ? { ...meal, IsFeast: 'true' } : meal)
+        );
+      } else {
+        toast.error('Failed to update meal.');
+      }
+    } catch (err) {
+      console.error('Error updating meal:', err);
+      toast.error('Error occurred while updating meal.');
+    }
   };
 
   const handleSaveItem = async (itemId: string) => {
@@ -268,7 +316,6 @@ const EditMenu2 = () => {
                     <p>No dishes found for this meal.</p>
                   )}
 
-                  {/* Add new item creation UI */}
                   <div className="edit-menu2-dish-row">
                     <input
                       type="text"
@@ -284,6 +331,25 @@ const EditMenu2 = () => {
                     />
                     <button onClick={() => handleCreateNewItem(meal.id)} className='edit-menu2-edit-button'>Add</button>
                   </div>
+
+                  {meal.IsFeast !== 'true' && (
+                    <div className="edit-menu2-dish-row">
+                      <label>
+                        Feast:
+                        <input
+                          type="checkbox"
+                          checked={editedFeastStatus[meal.id] ?? false}
+                          onChange={e => handleFeastToggle(meal.id, e.target.checked)}
+                        />
+                      </label>
+                      <button
+                        onClick={() => handleSaveFeast(meal.id)}
+                        className="edit-menu2-edit-button"
+                      >
+                        Mark as Feast
+                      </button>
+                    </div>
+                  )}
                 </li>
               );
             })}
