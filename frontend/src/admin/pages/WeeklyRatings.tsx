@@ -135,7 +135,9 @@ const WeeklyRatings = () => {
     <>
       <h1 className="wr-title">Ratings</h1>
       <div className="wr-uploader-wrapper">
-        {/* <ReadReview setRatings={setRatings} /> */}
+        <div className="wr-read-review">
+            <ReadReview setRatings={setRatings} />
+        </div>
         <div className="wr-menu-container">
           <div className="wr-date-navigation">
             <button onClick={() => changeDate(-1)} className="wr-btn-primary">
