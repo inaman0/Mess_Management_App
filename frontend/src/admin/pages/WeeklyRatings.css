@@ -167,3 +167,15 @@
   display: none;
 }
 
+.golden-badge {
+  background: linear-gradient(145deg, #ffd700, #ffcc00);
+  color: #4b3f00;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  margin-left: 0.6rem;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  display: inline-block;
+  /* vertical-align: middle; */
+}

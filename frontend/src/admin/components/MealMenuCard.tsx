@@ -5,7 +5,7 @@ interface MenuItemCardProps {
   Dish_name: string;
   type: string;
   id: string;
-  isFeast: boolean;
+  // isFeast: string;
   mealType?: string;
   ratings: {
     Menu_item_id: string;
@@ -18,7 +18,6 @@ const MealMenuCard: React.FC<MenuItemCardProps> = ({
   Dish_name,
   type,
   id,
-  isFeast,
   mealType,
   ratings,
 }) => {
@@ -50,7 +49,7 @@ const MealMenuCard: React.FC<MenuItemCardProps> = ({
 
   return (
     <div
-      className={`menu-item-card ${isFeast ? "menu-item-feast" : ""}`}
+      className={"menu-item-card"}
       data-meal-type={mealType}
     >
       <div className="menu-item-content">
@@ -66,8 +65,6 @@ const MealMenuCard: React.FC<MenuItemCardProps> = ({
             <p className="menu-item-rating">{ratingDisplay}</p>
           </div>
         </div>
-
-        {isFeast && <div className="menu-item-feast-badge">Feast Special</div>}
       </div>
     </div>
   );

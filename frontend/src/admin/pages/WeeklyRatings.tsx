@@ -15,6 +15,7 @@ interface MealData {
   id: string;
   Meal_type: string;
   Date: Date;
+  IsFeast: string; // string type to match API
 }
 
 interface Rating {
@@ -29,7 +30,7 @@ const WeeklyRatings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [ratings, setRatings] = useState<Rating[]>([]); // 🔁 ratings managed here
+  const [ratings, setRatings] = useState<Rating[]>([]);
 
   const apiUrl = `${apiConfig.getResourceUrl("menu_item")}?`;
   const apiMealUrl = `${apiConfig.getResourceUrl("meal")}?`;
@@ -111,6 +112,14 @@ const WeeklyRatings = () => {
     {}
   );
 
+  const mealFeastMap = currentDayMeals.reduce<Record<string, string>>(
+    (acc, meal) => {
+      acc[meal.id] = meal.IsFeast;
+      return acc;
+    },
+    {}
+  );
+
   const currentDayMenuItems = menuItems.filter((item) =>
     currentDayMeals.some((meal) => meal.id === item.Meal_id)
   );
@@ -136,7 +145,7 @@ const WeeklyRatings = () => {
       <h1 className="wr-title">Ratings</h1>
       <div className="wr-uploader-wrapper">
         <div className="wr-read-review">
-            <ReadReview setRatings={setRatings} />
+          <ReadReview setRatings={setRatings} />
         </div>
         <div className="wr-menu-container">
           <div className="wr-date-navigation">
@@ -160,9 +169,21 @@ const WeeklyRatings = () => {
               const items = groupedMenu[mealType];
               if (!items || items.length === 0) return null;
 
+              // ✅ Get mealId and feast status
+              const mealId = items[0].Meal_id;
+              const isFeast = mealFeastMap[mealId];
+              const feastType = isFeast == "true" ? "Feast" : "Normal";
+
               return (
                 <div key={mealType} className="wr-meal-type-section">
-                  <h2 className="wr-meal-type-title">{mealType}</h2>
+                  
+                  <h2 className="wr-meal-type-title">
+                    {mealType}{" "}
+                    {feastType === "Feast" && (
+                      <span className="golden-badge">Feast</span>
+                    )}
+                  </h2>
+
                   <div className="wr-meal-type-row">
                     {items.map((item) => (
                       <MealMenuCard
@@ -170,7 +191,6 @@ const WeeklyRatings = () => {
                         Dish_name={item.Dish_name}
                         type={item.type}
                         id={item.id}
-                        isFeast={false}
                         mealType={mealType}
                         ratings={ratings}
                       />
