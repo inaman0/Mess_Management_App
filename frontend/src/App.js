@@ -54,12 +54,10 @@ function App() {
       <Route path='/admin' element={<AdminLayout />}>
         <Route index element={<WeeklyRatings />} />
         <Route path='upload-menu' element={<UploadMenu />} />
-        {/* <Route path='add-feast' element={<AddFeast />} /> */}
         <Route path='edit-menu' element={<EditMenu />} />
         <Route path='feedback' element={<Feedback />} />
         <Route path='sick-meal' element={<SickMeals />} />
         <Route path='*' element={<Page404 />} />
-
       </Route>
     </Routes>
   );
