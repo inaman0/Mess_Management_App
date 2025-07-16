@@ -106,3 +106,32 @@
     height: auto;
   }
 }
+
+.student-details {
+  margin-top: 0.5rem;
+}
+
+.student-details > div {
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.student-details strong {
+  font-weight: 600;
+  color: #333;
+}
+
+.meal-details {
+  margin-top: 0.5rem;
+}
+
+.meal-details > div {
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.meal-details strong {
+  font-weight: 600;
+  color: #333;
+}
+
